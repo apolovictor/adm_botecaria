@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:asp/asp.dart';
 
 // Átomos para os campos do formulário de produto
@@ -30,3 +32,5 @@ final productNLoteAtom = atom<String>('');
 final productQLoteAtom = atom<double>(0.0);
 final productDFabAtom = atom<String>('');
 final productDValAtom = atom<String>('');
+
+final selectedImageState = atom<Uint8List?>(null);

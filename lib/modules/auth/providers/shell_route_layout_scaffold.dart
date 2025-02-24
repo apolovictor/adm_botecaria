@@ -31,7 +31,11 @@ class LayoutScaffold extends StatelessWidget with HookMixin {
             appBar:
                 authState is LoginStateSuccess
                     ? AppBar(
-                      // title: const Text('Botecaria'), // Your app title
+                      title:
+                          goRouterState.uri.path == '/productRegister'
+                              ? const Text('Cadastrar Produto')
+                              : const Text('Botecaria'),
+                      centerTitle: true,
                       surfaceTintColor: Colors.transparent,
                       backgroundColor: Colors.transparent,
                       shape: const RoundedRectangleBorder(

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:asp/asp.dart';
 import 'atoms.dart';
 
@@ -92,4 +94,12 @@ final setProductDFabAction = atomAction1<String>((set, value) {
 });
 final setProductDValAction = atomAction1<String>((set, value) {
   set(productDValAtom, value);
+});
+
+final setProductImageAction = atomAction1<Uint8List>((set, image) {
+  set(selectedImageState, image);
+});
+
+final clearProductImageAction = atomAction((set) {
+  set(selectedImageState, null);
 });

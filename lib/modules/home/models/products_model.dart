@@ -82,7 +82,7 @@ class Product {
   double get completionPercentage {
     int totalFields = 23; //Quantidade de campos opcionais que podem ser nulos
     int filledFields =
-        11; //NCM, xProd, uCom, quantCom, vUnCom, VProd, e campos essenciais
+        13; //NCM, xProd, uCom, quantCom, vUnCom, VProd, , categoria, gpcCode, marca, Descricao e campos essenciais
     //Verifica campos adicionais para tributação ST
     if (CEST != null) filledFields++;
     if (indEscala != null) filledFields++;
@@ -100,7 +100,6 @@ class Product {
     if (dVal != null) filledFields++;
 
     if (imageUrl != null) filledFields++;
-    if (descricao != null) filledFields++;
     if (precoMedioUnitario != null) filledFields++;
     if (precoMedioVenda != null) filledFields++;
 
@@ -176,3 +175,172 @@ class DeclarationOfImport {
     required this.dDesemb,
   });
 }
+
+class ProductSpecification {
+  final String campo;
+  final String tipo;
+  final String labelText;
+  final String resumo;
+
+  ProductSpecification({
+    required this.campo,
+    required this.tipo,
+    required this.labelText,
+    required this.resumo,
+  });
+}
+
+final List<ProductSpecification> productSpecifications = [
+  ProductSpecification(
+    campo: 'cProd',
+    tipo: 'String?',
+    labelText: 'Código do Produto',
+    resumo: 'Código interno ou externo de identificação do produto. Opcional.',
+  ),
+  ProductSpecification(
+    campo: 'cEAN',
+    tipo: 'String?',
+    labelText: 'GTIN (Código de Barras)',
+    resumo: 'Código de barras do produto (EAN, UPC). Use null se não houver.',
+  ),
+  ProductSpecification(
+    campo: 'xProd',
+    tipo: 'String',
+    labelText: 'Nome do Produto',
+    resumo: 'Descrição do produto. *Obrigatório*.',
+  ),
+  ProductSpecification(
+    campo: 'NCM',
+    tipo: 'String',
+    labelText: 'NCM (8 dígitos)',
+    resumo: 'Código da Nomenclatura Comum do Mercosul. *Obrigatório*.',
+  ),
+  ProductSpecification(
+    campo: 'EXTIPI',
+    tipo: 'String?',
+    labelText: 'Código EX TIPI (Opcional)',
+    resumo: 'Código EX da TIPI. Opcional.',
+  ),
+  ProductSpecification(
+    campo: 'CFOP',
+    tipo: 'String?',
+    labelText: 'CFOP',
+    resumo: 'Código Fiscal de Operações e Prestações. Depende da operação.',
+  ),
+  ProductSpecification(
+    campo: 'imageUrl',
+    tipo: 'String?',
+    labelText: 'Url Imagem',
+    resumo: 'Endereço da imagem do produto. Opcional.',
+  ),
+  ProductSpecification(
+    campo: 'categoria',
+    tipo: 'String',
+    labelText: 'Categoria',
+    resumo:
+        'Categoria do produto (ex: "Cerveja", "Refrigerante", "Lanche"). *Obrigatório*.',
+  ),
+  ProductSpecification(
+    campo: 'gpcCode',
+    tipo: 'String',
+    labelText: 'GPC Code',
+    resumo: 'Código GPC (Global Product Classification). *Obrigatório*.',
+  ),
+  ProductSpecification(
+    campo: 'marca',
+    tipo: 'String',
+    labelText: 'Marca',
+    resumo: 'Marca do produto. *Obrigatório*.',
+  ),
+  ProductSpecification(
+    campo: 'descricao',
+    tipo: 'String',
+    labelText: 'Descrição',
+    resumo: 'Descrição detalhada do produto. *Obrigatório*.',
+  ),
+  ProductSpecification(
+    campo: 'CEST',
+    tipo: 'String?',
+    labelText: 'CEST (Opcional)',
+    resumo:
+        'Código Especificador da Substituição Tributária. Importante para ST.',
+  ),
+  ProductSpecification(
+    campo: 'indEscala',
+    tipo: 'String?',
+    labelText: 'Indicador Escala (Opcional)',
+    resumo: 'Indicador de Produção em escala relevante ou não.',
+  ),
+  ProductSpecification(
+    campo: 'CNPJFab',
+    tipo: 'String?',
+    labelText: 'CNPJ Fabricante (Opcional)',
+    resumo: 'CNPJ do Fabricante da Mercadoria, se a escala não for relevante.',
+  ),
+  ProductSpecification(
+    campo: 'cBenef',
+    tipo: 'String?',
+    labelText: 'Cod Benef (Opcional)',
+    resumo: 'Código de Benefício Fiscal, se aplicável.',
+  ),
+  ProductSpecification(
+    campo: 'qVol',
+    tipo: 'double?',
+    labelText: 'Quantidade no Lote (Opcional)',
+    resumo: 'Quantidade de produto no Lote.',
+  ),
+  ProductSpecification(
+    campo: 'uTrib',
+    tipo: 'String?',
+    labelText: 'Unidade Tributável (Opcional)',
+    resumo: 'Unidade de medida para fins de tributação.',
+  ),
+  ProductSpecification(
+    campo: 'qTrib',
+    tipo: 'double?',
+    labelText: 'Quantidade Tributável (Opcional)',
+    resumo: 'Quantidade para fins de tributação.',
+  ),
+  ProductSpecification(
+    campo: 'vUnTrib',
+    tipo: 'double?',
+    labelText: 'Valor Unitário Tributação (Opcional)',
+    resumo: 'Valor unitário para fins de tributação.',
+  ),
+  ProductSpecification(
+    campo: 'nLote',
+    tipo: 'String?',
+    labelText: 'NLote (Opcional)',
+    resumo: 'Número de série do produto',
+  ),
+  ProductSpecification(
+    campo: 'qLote',
+    tipo: 'double?',
+    labelText: 'Quantidade no lote (Opcional)',
+    resumo: 'Número do lote do produto',
+  ),
+  ProductSpecification(
+    campo: 'dFab',
+    tipo: 'String?',
+    labelText: 'dFab (Opcional)',
+    resumo: 'Data de Fabricação',
+  ),
+  ProductSpecification(
+    campo: 'dVal',
+    tipo: 'String?',
+    labelText: 'dVal (Opcional)',
+    resumo: 'Data de Validade',
+  ),
+  ProductSpecification(
+    campo: 'precoMedioUnitario',
+    tipo: 'double?',
+    labelText: 'Preço médio unitário',
+    resumo: 'Preço médio unitário calculado',
+  ),
+  ProductSpecification(
+    campo: 'precoMedioVenda',
+    tipo: 'double?',
+    labelText: 'Preço médio de venda',
+    resumo: 'Preço médio de venda',
+  ),
+];

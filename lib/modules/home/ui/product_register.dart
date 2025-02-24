@@ -1,12 +1,15 @@
+import 'package:asp/asp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import para inputFormatters
-import 'package:intl/intl.dart';
 
-import '../asp/actions.dart'; // Import para formatação de moeda
+import '../asp/actions.dart';
+import '../asp/atoms.dart';
+import '../helpers/helpers.dart';
+import '../models/products_model.dart'; // Import para formatação de moeda
 
 final _formKey = GlobalKey<FormState>();
 
-class ProductRegister extends StatelessWidget {
+class ProductRegister extends StatelessWidget with HookMixin {
   // final FocusNode focusNodeNCM = FocusNode();
   // final FocusNode focusNodePreco = FocusNode();
   // final FocusNode focusNodeCom = FocusNode();
@@ -93,325 +96,492 @@ class ProductRegister extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<FocusNode> focusNodes = List.generate(27, (_) => FocusNode());
 
-    return Form(
-      key: _formKey,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Código do Produto (Interno)',
-                ),
-                keyboardType: TextInputType.text,
-                focusNode: focusNodes[0],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[1]),
-                onChanged: (value) => setProductCodeAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'GTIN (Código de Barras)',
-                ),
-                keyboardType: TextInputType.text,
-                focusNode: focusNodes[1],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[2]),
-                onChanged: (value) => setProductEANAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Nome Produto (Opcional mostrado na NF)',
-                ),
-                keyboardType: TextInputType.text,
-                validator: businessNameValidator,
-                focusNode: focusNodes[2],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[3]),
-                onChanged: (value) => setProductNameAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'NCM (8 dígitos)'),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                validator: validateNCM,
-                focusNode: focusNodes[3],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[4]),
-                onChanged: (value) => setProductNCMAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Código EX TIPI (Opcional)',
-                ),
-                keyboardType: TextInputType.text,
-                focusNode: focusNodes[4],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[5]),
-                onChanged: (value) => setProductEXTIPIAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'CFOP'),
-                initialValue: '5102',
-                keyboardType: TextInputType.number,
-                focusNode: focusNodes[5],
-                enabled: false,
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[6]),
-                onChanged: (value) => setProductCFOPAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Unidade Comercial',
-                ),
-                keyboardType: TextInputType.text,
-                focusNode: focusNodes[6],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[7]),
-                onChanged: (value) => setProductUComAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Quantidade Comercial',
-                ),
-                keyboardType: TextInputType.number,
-                validator: validateQuantity,
-                focusNode: focusNodes[7],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[8]),
-                onChanged: (value) {
-                  final parsedValue = double.tryParse(value);
-                  if (parsedValue != null) {
-                    setProductQComAction(parsedValue);
-                  }
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Valor Unitário'),
-                keyboardType: TextInputType.number,
-                focusNode: focusNodes[8],
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[9]),
-                onChanged: (value) {
-                  final parsedValue = double.tryParse(value);
-                  if (parsedValue != null) {
-                    setProductVUnComAction(parsedValue);
-                  }
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Valor Produto'),
-                keyboardType: TextInputType.number,
-                focusNode: focusNodes[9],
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[10]),
-                onChanged: (value) {
-                  final parsedValue = double.tryParse(value);
-                  if (parsedValue != null) {
-                    setProductVProdAction(parsedValue);
-                  }
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Url Imagem'),
-                keyboardType: TextInputType.text,
-                focusNode: focusNodes[10],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[11]),
-                onChanged: (value) => setProductImageUrlAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Categoria'),
-                keyboardType: TextInputType.text,
-                validator: businessNameValidator,
-                focusNode: focusNodes[11],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[12]),
-                onChanged: (value) => setProductCategoriaAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'GPC Code'),
-                keyboardType: TextInputType.text,
-                validator: businessNameValidator,
-                focusNode: focusNodes[12],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[13]),
-                onChanged: (value) => setProductGpcCodeAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Marca'),
-                keyboardType: TextInputType.text,
-                validator: businessNameValidator,
-                focusNode: focusNodes[13],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[14]),
-                onChanged: (value) => setProductMarcaAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Descrição'),
-                keyboardType: TextInputType.multiline,
-                maxLines: 3,
-                focusNode: focusNodes[14],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[15]),
-                onChanged: (value) => setProductDescricaoAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'CEST (Opcional)'),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                focusNode: focusNodes[15],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[16]),
-                onChanged: (value) => setProductCESTAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Indicador Escala (Opcional)',
-                ),
-                keyboardType: TextInputType.text,
-                focusNode: focusNodes[16],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[17]),
-                onChanged: (value) => setProductIndEscalaAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'CNPJ Fabricante (Opcional)',
-                ),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                focusNode: focusNodes[17],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[18]),
-                onChanged: (value) => setProductCNPJFabAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Cod Benef (Opcional)',
-                ),
-                keyboardType: TextInputType.text,
-                focusNode: focusNodes[18],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[19]),
-                onChanged: (value) => setProductCBenefAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Quantidade no Lote (Opcional)',
-                ),
-                keyboardType: TextInputType.number,
-                focusNode: focusNodes[19],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[20]),
-                onChanged: (value) {
-                  final parsedValue = double.tryParse(value);
-                  if (parsedValue != null) {
-                    setProductQVolAction(parsedValue);
-                  }
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Unidade Tributável (Opcional)',
-                ),
-                keyboardType: TextInputType.text,
-                focusNode: focusNodes[20],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[21]),
-                onChanged: (value) => setProductUTribAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Quantidade Tributável (Opcional)',
-                ),
-                keyboardType: TextInputType.number,
-                focusNode: focusNodes[21],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[22]),
-                onChanged: (value) {
-                  final parsedValue = double.tryParse(value);
-                  if (parsedValue != null) {
-                    setProductQTribAction(parsedValue);
-                  }
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Valor Unitário Tributação (Opcional)',
-                ),
-                keyboardType: TextInputType.number,
-                focusNode: focusNodes[22],
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[23]),
-                onChanged: (value) {
-                  final parsedValue = double.tryParse(value);
-                  if (parsedValue != null) {
-                    setProductVUnTribAction(parsedValue);
-                  }
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'NLote (Opcional)',
-                ),
-                keyboardType: TextInputType.text,
-                focusNode: focusNodes[23],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[24]),
-                onChanged: (value) => setProductNLoteAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Quantidade no lote (Opcional)',
-                ),
-                keyboardType: TextInputType.number,
-                focusNode: focusNodes[24],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[25]),
-                onChanged: (value) {
-                  final parsedValue = double.tryParse(value);
-                  if (parsedValue != null) {
-                    setProductQLoteAction(parsedValue);
-                  }
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'dFab (Opcional)'),
-                keyboardType: TextInputType.datetime,
-                focusNode: focusNodes[25],
-                onFieldSubmitted:
-                    (_) => FocusScope.of(context).requestFocus(focusNodes[26]),
-                onChanged: (value) => setProductDFabAction(value),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'dVal (Opcional)'),
-                keyboardType: TextInputType.datetime,
-                focusNode: focusNodes[26],
-                onChanged: (value) => setProductDValAction(value),
-              ),
+    final selectedImage = useAtomState(selectedImageState);
 
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      // Aqui você pode acessar os valores dos controllers e criar o objeto Product
+    return Scaffold(
+      body: Form(
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    selectedImage == null
+                        ? Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Colors.white, Colors.grey],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(100),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black45,
+                                offset: Offset(4, 4),
+                                blurRadius: 2,
+                              ),
+                              BoxShadow(
+                                color: Colors.white,
+                                offset: Offset(-4, -4),
+                                blurRadius: 2,
+                              ),
+                            ],
+                          ),
+                          child: Stack(
+                            children: [
+                              MaterialButton(
+                                shape: const CircleBorder(),
+                                onPressed: () {
+                                  WidgetsBinding.instance.addPostFrameCallback((
+                                    _,
+                                  ) async {
+                                    await getGalleryImage(100, 100);
+                                  });
+                                },
+                                child: Center(
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                    size: 50,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                        : SizedBox(
+                          height: 100,
+                          width: 100,
+                          child: Stack(
+                            children: [
+                              Center(
+                                child: ClipOval(
+                                  child: Image.memory(
+                                    selectedImage!,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: -10,
+                                // left: 0,
+                                right: 0,
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    size: 30,
+                                    color: Colors.grey.shade900,
+                                  ),
+                                  onPressed: clearProductImageAction.call,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                  ],
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Código do Produto (Interno)',
+                  ),
+                  keyboardType: TextInputType.text,
+                  focusNode: focusNodes[0],
+                  onFieldSubmitted:
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[1]),
+                  onChanged: (value) => setProductCodeAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'GTIN (Código de Barras)',
+                  ),
+                  keyboardType: TextInputType.text,
+                  focusNode: focusNodes[1],
+                  onFieldSubmitted:
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[2]),
+                  onChanged: (value) => setProductEANAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Nome Produto (Opcional mostrado na NF)',
+                  ),
+                  keyboardType: TextInputType.text,
+                  validator: businessNameValidator,
+                  focusNode: focusNodes[2],
+                  onFieldSubmitted:
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[3]),
+                  onChanged: (value) => setProductNameAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'NCM (8 dígitos)',
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  validator: validateNCM,
+                  focusNode: focusNodes[3],
+                  onFieldSubmitted:
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[4]),
+                  onChanged: (value) => setProductNCMAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Código EX TIPI (Opcional)',
+                  ),
+                  keyboardType: TextInputType.text,
+                  focusNode: focusNodes[4],
+                  onFieldSubmitted:
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[5]),
+                  onChanged: (value) => setProductEXTIPIAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'CFOP'),
+                  initialValue: '5102',
+                  keyboardType: TextInputType.number,
+                  focusNode: focusNodes[5],
+                  enabled: false,
+                  onFieldSubmitted:
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[6]),
+                  onChanged: (value) => setProductCFOPAction(value),
+                ),
+
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Url Imagem'),
+                  keyboardType: TextInputType.text,
+                  focusNode: focusNodes[6],
+                  onFieldSubmitted:
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[7]),
+                  onChanged: (value) => setProductImageUrlAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Categoria'),
+                  keyboardType: TextInputType.text,
+                  validator: businessNameValidator,
+                  focusNode: focusNodes[7],
+                  onFieldSubmitted:
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[8]),
+                  onChanged: (value) => setProductCategoriaAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'GPC Code'),
+                  keyboardType: TextInputType.text,
+                  validator: businessNameValidator,
+                  focusNode: focusNodes[8],
+                  onFieldSubmitted:
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[9]),
+                  onChanged: (value) => setProductGpcCodeAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Marca'),
+                  keyboardType: TextInputType.text,
+                  validator: businessNameValidator,
+                  focusNode: focusNodes[9],
+                  onFieldSubmitted:
+                      (_) =>
+                          FocusScope.of(context).requestFocus(focusNodes[10]),
+                  onChanged: (value) => setProductMarcaAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Descrição'),
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 3,
+                  focusNode: focusNodes[10],
+                  onFieldSubmitted:
+                      (_) =>
+                          FocusScope.of(context).requestFocus(focusNodes[11]),
+                  onChanged: (value) => setProductDescricaoAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'CEST (Opcional)',
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  focusNode: focusNodes[11],
+                  onFieldSubmitted:
+                      (_) =>
+                          FocusScope.of(context).requestFocus(focusNodes[12]),
+                  onChanged: (value) => setProductCESTAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Indicador Escala (Opcional)',
+                  ),
+                  keyboardType: TextInputType.text,
+                  focusNode: focusNodes[12],
+                  onFieldSubmitted:
+                      (_) =>
+                          FocusScope.of(context).requestFocus(focusNodes[13]),
+                  onChanged: (value) => setProductIndEscalaAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'CNPJ Fabricante (Opcional)',
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  focusNode: focusNodes[13],
+                  onFieldSubmitted:
+                      (_) =>
+                          FocusScope.of(context).requestFocus(focusNodes[14]),
+                  onChanged: (value) => setProductCNPJFabAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Cod Benef (Opcional)',
+                  ),
+                  keyboardType: TextInputType.text,
+                  focusNode: focusNodes[14],
+                  onChanged: (value) => setProductCBenefAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Quantidade no Lote (Opcional)',
+                  ),
+                  keyboardType: TextInputType.number,
+                  focusNode: focusNodes[15],
+                  onFieldSubmitted:
+                      (_) =>
+                          FocusScope.of(context).requestFocus(focusNodes[16]),
+                  onChanged: (value) {
+                    final parsedValue = double.tryParse(value);
+                    if (parsedValue != null) {
+                      setProductQVolAction(parsedValue);
                     }
                   },
-                  child: const Text('Salvar'),
                 ),
-              ),
-            ],
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Unidade Tributável (Opcional)',
+                  ),
+                  keyboardType: TextInputType.text,
+                  focusNode: focusNodes[16],
+                  onFieldSubmitted:
+                      (_) =>
+                          FocusScope.of(context).requestFocus(focusNodes[17]),
+                  onChanged: (value) => setProductUTribAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Quantidade Tributável (Opcional)',
+                  ),
+                  keyboardType: TextInputType.number,
+                  focusNode: focusNodes[17],
+                  onFieldSubmitted:
+                      (_) =>
+                          FocusScope.of(context).requestFocus(focusNodes[18]),
+                  onChanged: (value) {
+                    final parsedValue = double.tryParse(value);
+                    if (parsedValue != null) {
+                      setProductQTribAction(parsedValue);
+                    }
+                  },
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Valor Unitário Tributação (Opcional)',
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  focusNode: focusNodes[18],
+                  onFieldSubmitted:
+                      (_) =>
+                          FocusScope.of(context).requestFocus(focusNodes[19]),
+                  onChanged: (value) {
+                    final parsedValue = double.tryParse(value);
+                    if (parsedValue != null) {
+                      setProductVUnTribAction(parsedValue);
+                    }
+                  },
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'NLote (Opcional)',
+                  ),
+                  keyboardType: TextInputType.text,
+                  focusNode: focusNodes[19],
+                  onFieldSubmitted:
+                      (_) =>
+                          FocusScope.of(context).requestFocus(focusNodes[20]),
+                  onChanged: (value) => setProductNLoteAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Quantidade no lote (Opcional)',
+                  ),
+                  keyboardType: TextInputType.number,
+                  focusNode: focusNodes[20],
+                  onFieldSubmitted:
+                      (_) =>
+                          FocusScope.of(context).requestFocus(focusNodes[21]),
+                  onChanged: (value) {
+                    final parsedValue = double.tryParse(value);
+                    if (parsedValue != null) {
+                      setProductQLoteAction(parsedValue);
+                    }
+                  },
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'dFab (Opcional)',
+                  ),
+                  keyboardType: TextInputType.datetime,
+                  focusNode: focusNodes[21],
+                  onFieldSubmitted:
+                      (_) =>
+                          FocusScope.of(context).requestFocus(focusNodes[22]),
+                  onChanged: (value) => setProductDFabAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'dVal (Opcional)',
+                  ),
+                  keyboardType: TextInputType.datetime,
+                  focusNode: focusNodes[22],
+                  onChanged: (value) => setProductDValAction(value),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Preço médio unitário',
+                  ),
+                  keyboardType: TextInputType.text,
+                  focusNode: focusNodes[23],
+                  onChanged: (value) {
+                    final parsedValue = double.tryParse(value);
+                    if (parsedValue != null) {
+                      setProductVUnTribAction(parsedValue);
+                    }
+                  },
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Preço médio de venda',
+                  ),
+                  keyboardType: TextInputType.text,
+                  focusNode: focusNodes[24],
+                  onChanged: (value) => setProductDescricaoAction(value),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 60,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                          // Aqui você pode acessar os valores dos controllers e criar o objeto Product
+                        } else {
+                          return;
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        backgroundColor: Colors.black87,
+                      ),
+                      child: const Text(
+                        'Salvar',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                actions: <Widget>[],
+                title: Row(
+                  children: [
+                    TextButton(
+                      child: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    Text(
+                      "Tabela de Especificações",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+                content: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+
+                  child: SingleChildScrollView(
+                    child: DataTable(
+                      horizontalMargin: 20,
+                      columns: const [
+                        DataColumn(
+                          label: Text(
+                            'Código',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Tipo',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Correspondência',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                        ),
+
+                        DataColumn(
+                          label: Text(
+                            'Resumo',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ],
+                      rows:
+                          productSpecifications
+                              .map(
+                                (spec) => DataRow(
+                                  cells: [
+                                    DataCell(Text(spec.campo)),
+                                    DataCell(Text(spec.tipo)),
+                                    DataCell(Text(spec.labelText)),
+                                    DataCell(Text(spec.resumo)),
+                                  ],
+                                ),
+                              )
+                              .toList(),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        backgroundColor: Colors.black87,
+        child: Icon(Icons.help, color: Colors.white),
       ),
     );
   }
