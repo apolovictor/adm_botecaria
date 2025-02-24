@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "621028926504",
+    "project_id": "botecaria-1",
+    "storage_bucket": "botecaria-1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:621028926504:android:76227863f8ce4610fb011d",
+        "android_client_info": {
+          "package_name": "com.example.adm_botecaria"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGxgRnQdLMTfmW_hmNtb9SwxODXVs55b8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:621028926504:android:4067545a01dd00bffb011d",
+        "android_client_info": {
+          "package_name": "com.example.botecaria"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGxgRnQdLMTfmW_hmNtb9SwxODXVs55b8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
