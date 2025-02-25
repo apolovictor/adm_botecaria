@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:asp/asp.dart';
+import '../models/category_model.dart';
 import 'atoms.dart';
 
 // Actions para modificar os átomos dos campos de produto
@@ -52,4 +53,11 @@ final setProductDescricaoAction = atomAction1<String>((set, value) {
 
 final setPositionFloatingButtonAction = atomAction1<bool>((set, value) {
   set(isPositionFloatingButtonAtom, value);
+});
+
+final addCategoriesToListAction = atomAction1<List<Categories>>((
+  set,
+  categories,
+) {
+  set(categoriesListAtom, [...categories]);
 });

@@ -2,8 +2,8 @@ import 'package:asp/asp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../shared/widgets/overlay_snackbar.dart';
 import '../asp/actions.dart';
 import '../asp/atoms.dart';
 import 'states/login_states.dart';
@@ -22,6 +22,13 @@ class LayoutScaffold extends StatelessWidget with HookMixin {
   @override
   Widget build(BuildContext context) {
     final authState = useAtomState(loginStateAtom);
+
+    if (authState is LoginStateError) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        showOverlaySnackbar(context, authState.errorMessage);
+      });
+    }
+
     return Material(
       color: Colors.white.withOpacity(0.2),
       child: Stack(

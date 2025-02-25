@@ -4,6 +4,7 @@ import 'package:flutter/services.dart'; // Import para inputFormatters
 
 import '../asp/actions.dart';
 import '../asp/atoms.dart';
+import '../asp/selectores.dart';
 import '../helpers/helpers.dart';
 import 'widgets/brand_field.dart';
 import 'widgets/categories_field.dart';
@@ -104,16 +105,19 @@ class ProductRegister extends StatelessWidget with HookMixin {
     final scrollController = useAtomState(scrollControllerAtom);
     final isPositionFloatingButton = useAtomState(isPositionFloatingButtonAtom);
 
-    if (scrollController.hasClients) {
-      scrollController.addListener(() {
-        if (scrollController.position.pixels >=
-            (scrollController.position.maxScrollExtent * 0.82)) {
+    useAtomEffect((get) {
+      get(scrollControllerAtom).addListener(() {
+        if (get(scrollControllerAtom).position.pixels >=
+            (get(scrollControllerAtom).position.maxScrollExtent * 0.8)) {
           setPositionFloatingButtonAction(true);
         } else {
           setPositionFloatingButtonAction(false);
         }
       });
-    }
+      return () {
+        get(scrollControllerAtom).removeListener(() {});
+      };
+    });
 
     return Scaffold(
       floatingActionButtonLocation:
