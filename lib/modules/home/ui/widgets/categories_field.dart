@@ -39,9 +39,6 @@ class CategoriesField extends ConsumerWidget {
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(12),
               ),
-              // fillColor: Color(
-              //   int.parse(widget.product.secondaryColor),
-              // ),
               filled: true,
               // hintText: productCategory,
             ),

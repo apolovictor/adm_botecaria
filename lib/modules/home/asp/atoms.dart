@@ -4,6 +4,7 @@ import 'package:asp/asp.dart';
 import 'package:flutter/widgets.dart';
 
 import '../models/category_model.dart';
+import '../models/unidades_de_medida_model.dart';
 
 // Átomos para os campos do formulário de produto
 final selectedImageState = atom<Uint8List?>(null);
@@ -24,3 +25,4 @@ final productDescricaoAtom = atom<String>('');
 final scrollControllerAtom = atom<ScrollController>(ScrollController());
 final isPositionFloatingButtonAtom = atom<bool>(false);
 final categoriesListAtom = atom<List<Categories>>([]);
+final unidadesDeMeddidaListAtom = atom<List<UnidadesDeMedidaModel>>([]);

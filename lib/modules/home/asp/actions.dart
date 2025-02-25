@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:asp/asp.dart';
 import '../models/category_model.dart';
+import '../models/unidades_de_medida_model.dart';
 import 'atoms.dart';
 
 // Actions para modificar os átomos dos campos de produto
@@ -61,3 +62,8 @@ final addCategoriesToListAction = atomAction1<List<Categories>>((
 ) {
   set(categoriesListAtom, [...categories]);
 });
+
+final addUnidadesDeMedidaToListAction =
+    atomAction1<List<UnidadesDeMedidaModel>>((set, unidadesDeMedida) {
+      set(unidadesDeMeddidaListAtom, [...unidadesDeMedida]);
+    });
