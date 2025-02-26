@@ -11,7 +11,7 @@ class Product {
   String? gpcCode; // Código GPC (Global Product Classification) -
   String? marca; // Marca do produto
   String? descricao; // Descrição detalhada do produto
-  String? CNPJFab;
+  List<dynamic>? CNPJFab;
 
   //Preços médios - Informações adicionais
   double? precoMedioUnitario; // Preço médio unitário calculado
@@ -344,13 +344,6 @@ final List<ProductSpecification> productSpecifications = [
     labelText: 'Marca',
     resumo:
         'Marca do produto. Deixe em branco se não houver ou cadastre uma nova. **CNPJ obrigatorio para o cadastro.',
-  ),
-  ProductSpecification(
-    campo: 'CNPJFab',
-    tipo: 'String?',
-    labelText: 'CNPJ Fabricante (Opcional)',
-    resumo:
-        'CNPJ do Fabricante da Mercadoria. Deixe em branco se não houver ou cadastre uma nova.',
   ),
   ProductSpecification(
     campo: 'CEST',

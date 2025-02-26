@@ -1,14 +1,19 @@
+import 'package:adm_botecaria/modules/home/ui/widgets/gpc_bricks_field.dart';
+import 'package:adm_botecaria/modules/home/ui/widgets/gpc_family_field.dart';
 import 'package:asp/asp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Import para inputFormatters
 
+import '../../../shared/helpers/firebase_errors.dart';
 import '../asp/actions.dart';
 import '../asp/atoms.dart';
-import '../asp/selectores.dart';
+import '../asp/selectors.dart';
 import '../helpers/helpers.dart';
+import '../../../shared/helpers/validators.dart';
 import 'widgets/brand_field.dart';
 import 'widgets/categories_field.dart';
 import 'widgets/cnpj_field.dart';
+import 'widgets/gpc_class_field.dart';
 import 'widgets/medidas_field.dart';
 import 'widgets/specification_table.dart';
 import 'widgets/text_field_widget.dart'; // Import para formatação de moeda
@@ -22,88 +27,15 @@ class ProductRegister extends StatelessWidget with HookMixin {
 
   const ProductRegister({super.key});
 
-  String? validateNCM(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'NCM é obrigatório.';
-    }
-    if (value.length != 8) {
-      return 'NCM deve ter 8 dígitos.';
-    }
-    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-      return 'NCM deve conter apenas números.';
-    }
-    return null;
-  }
-
-  String? businessNameValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Campo obrigatório.';
-    }
-    return null;
-  }
-
-  String? validatePrice(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Campo obrigatório.';
-    }
-    try {
-      double price = parseCurrencyString(value);
-      if (price <= 0) {
-        return 'O preço deve ser maior que zero.';
-      }
-    } catch (e) {
-      return 'Valor inválido. Use o formato correto.';
-    }
-    return null;
-  }
-
-  double parseCurrencyString(String currencyString) {
-    // Remove todos os caracteres que não são dígitos ou o separador decimal
-    final cleanedString = currencyString.replaceAll(RegExp(r'[^\d.,]'), '');
-
-    // Substitui a vírgula por ponto se a localidade for 'pt_Br'
-    final replacedString = cleanedString.replaceAll(',', '.');
-
-    // Tenta fazer o parse
-    return double.parse(replacedString);
-  }
-
-  String? validateCost(String? value) {
-    if (value != null) {
-      try {
-        double cost = parseCurrencyString(value);
-        if (cost <= 0) {
-          return 'O custo deve ser maior que zero.';
-        }
-      } catch (e) {
-        return 'Valor inválido. Use o formato correto.';
-      }
-    }
-    return null;
-  }
-
-  String? validateQuantity(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Campo obrigatório.';
-    }
-    try {
-      double quantity = double.parse(value);
-      if (quantity <= 0) {
-        return 'A quantidade deve ser maior que zero.';
-      }
-    } catch (e) {
-      return 'Quantidade inválida. Use o formato correto.';
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final List<FocusNode> focusNodes = List.generate(10, (_) => FocusNode());
+    final List<FocusNode> focusNodes = List.generate(11, (_) => FocusNode());
 
     final selectedImage = useAtomState(selectedImageState);
     final scrollController = useAtomState(scrollControllerAtom);
     final isPositionFloatingButton = useAtomState(isPositionFloatingButtonAtom);
+    final gpcFamilySelected = useAtomState(gpcFamilySelectedAtom);
+    final gpcClassSelected = useAtomState(gpcClassSelectedAtom);
 
     useAtomEffect((get) {
       get(scrollControllerAtom).addListener(() {
@@ -220,7 +152,7 @@ class ProductRegister extends StatelessWidget with HookMixin {
                   labelText: 'Código do Produto (Interno) *',
                   keyboardType: TextInputType.text,
                   focusNodeCurrent: focusNodes[0],
-                  validator: businessNameValidator,
+                  validator: cProd,
                   onFieldSubmitted:
                       (_) => FocusScope.of(context).requestFocus(focusNodes[1]),
 
@@ -229,8 +161,9 @@ class ProductRegister extends StatelessWidget with HookMixin {
                 SizedBox(height: 10),
                 getTextField(
                   labelText: 'GTIN (Código de Barras)',
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.number,
                   focusNodeCurrent: focusNodes[1],
+                  validator: cEan,
                   onFieldSubmitted:
                       (_) => FocusScope.of(context).requestFocus(focusNodes[2]),
 
@@ -241,6 +174,7 @@ class ProductRegister extends StatelessWidget with HookMixin {
                   labelText: 'Nome do Produto (Opcional mostrado na NF)',
                   keyboardType: TextInputType.text,
                   focusNodeCurrent: focusNodes[2],
+                  validator: xProd,
                   onFieldSubmitted:
                       (_) => FocusScope.of(context).requestFocus(focusNodes[3]),
 
@@ -250,6 +184,8 @@ class ProductRegister extends StatelessWidget with HookMixin {
                 getTextField(
                   labelText: 'NCM (8 dígitos)',
                   keyboardType: TextInputType.number,
+                  validator: validateNCM,
+
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   focusNodeCurrent: focusNodes[3],
                   onFieldSubmitted:
@@ -270,23 +206,31 @@ class ProductRegister extends StatelessWidget with HookMixin {
                 SizedBox(height: 10),
 
                 //!! DropDown
-                CategoriesField(focusNode: focusNodes[5]),
+                GpcFamilyField(focusNode: focusNodes[5]),
+                SizedBox(height: 10),
+                gpcFamilySelected != null ? GpcClassField() : SizedBox(),
+                gpcFamilySelected != null ? SizedBox(height: 10) : SizedBox(),
+                gpcClassSelected != null ? GpcBricksField() : SizedBox(),
+                gpcClassSelected != null ? SizedBox(height: 10) : SizedBox(),
+                CategoriesField(),
                 SizedBox(height: 10),
                 UnidadedMediddaField(),
                 SizedBox(height: 10),
-                BrandField(),
-                SizedBox(height: 10),
-                CnpjField(),
+                BrandField(
+                  focusNode: focusNodes[6],
+                  onFieldSubmitted:
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[7]),
+                ),
                 SizedBox(height: 10),
                 //!! validator max length 7
                 getTextField(
                   labelText: 'CEST',
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-
-                  focusNodeCurrent: focusNodes[6],
+                  validator: cest,
+                  focusNodeCurrent: focusNodes[7],
                   onFieldSubmitted:
-                      (_) => FocusScope.of(context).requestFocus(focusNodes[7]),
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[8]),
 
                   onChanged: (value) => setProductCESTAction(value),
                 ),
@@ -296,9 +240,9 @@ class ProductRegister extends StatelessWidget with HookMixin {
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
 
-                  focusNodeCurrent: focusNodes[7],
+                  focusNodeCurrent: focusNodes[8],
                   onFieldSubmitted:
-                      (_) => FocusScope.of(context).requestFocus(focusNodes[8]),
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[9]),
 
                   onChanged: (value) {
                     final parsedValue = double.tryParse(value);
@@ -313,9 +257,10 @@ class ProductRegister extends StatelessWidget with HookMixin {
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
 
-                  focusNodeCurrent: focusNodes[8],
+                  focusNodeCurrent: focusNodes[9],
                   onFieldSubmitted:
-                      (_) => FocusScope.of(context).requestFocus(focusNodes[9]),
+                      (_) =>
+                          FocusScope.of(context).requestFocus(focusNodes[10]),
 
                   onChanged: (value) {
                     final parsedValue = double.tryParse(value);
@@ -332,7 +277,7 @@ class ProductRegister extends StatelessWidget with HookMixin {
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   maxLines: 3,
 
-                  focusNodeCurrent: focusNodes[9],
+                  focusNodeCurrent: focusNodes[10],
 
                   onChanged: (value) => setProductDescricaoAction(value),
                 ),

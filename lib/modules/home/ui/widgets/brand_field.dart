@@ -1,74 +1,145 @@
+import 'package:adm_botecaria/modules/home/models/manufacturers_model.dart';
+import 'package:asp/asp.dart';
 import 'package:flutter/material.dart';
 
-class BrandField extends StatelessWidget {
-  const BrandField({super.key});
+import '../../asp/actions.dart';
+import '../../asp/atoms.dart';
+import '../../asp/selectors.dart';
+
+class BrandField extends StatelessWidget with HookMixin {
+  const BrandField({
+    super.key,
+    required this.focusNode,
+    required this.onFieldSubmitted,
+  });
+
+  final FocusNode focusNode;
+  final Function(String)? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.maxFinite,
-      height: 60,
-      child: DropdownButtonFormField(
-        isExpanded: true,
-        decoration: InputDecoration(
-          label: Text('Marca'),
-          labelStyle: const TextStyle(fontSize: 16, color: Colors.black54),
-          focusColor: Colors.black54,
-          floatingLabelBehavior: FloatingLabelBehavior.always,
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.transparent),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          // fillColor: Color(
-          //   int.parse(widget.product.secondaryColor),
-          // ),
-          filled: true,
-          // hintText: productCategory,
-        ),
-        // value: widget.category,
-        onChanged: (_) {},
-        //     (value) => setDetailProductCategoryAction(
-        //       value!.iconName,
-        //     ),
-        items: [],
-        // categoriesList.map((e) {
-        //   final asyncSvgOptionsWidget = ref.watch(
-        //     categoryIconProvider(e),
-        //   );
+    useAtomState(getManufacturersSelector);
+    final filteredManufacturersList = useAtomState(
+      filteredManufacturersListAtom,
+    );
+    final filter = useAtomState(filterManufacturersAtom);
+    final selectedManufacturer = useAtomState(selectedManufacturersAtom);
 
-        // return DropdownMenuItem(
-        //   value: e,
-        //   child: SizedBox(
-        //     height: 50,
-        //     child: Row(
-        //       mainAxisAlignment:
-        //           MainAxisAlignment.spaceBetween,
-        //       children: [
-        //         Text(e.iconName),
-        //         SizedBox(
-        //           height: 20,
-        //           width: 20,
-        //           child: asyncSvgOptionsWidget.when(
-        //             data:
-        //                 (svgPicture) => svgPicture,
-        //             loading:
-        //                 () =>
-        //                     const CircularProgressIndicator(),
-        //             error:
-        //                 (error, stackTrace) =>
-        //                     const Icon(Icons.error),
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // );
-        // }).toList(),
-      ),
+    getChip(Manufacturer manufacturer) {
+      return SizedBox(
+        height: 50,
+        width: MediaQuery.of(context).size.width,
+        child: Padding(
+          padding: const EdgeInsets.only(right: 50.0, top: 3, bottom: 3),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+            ),
+            onPressed: () => setSelectedManufacturerAction(manufacturer),
+            child: Text(
+              manufacturer.name,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+          ),
+        ),
+      );
+    }
+
+    generateBrands() {
+      return filteredManufacturersList
+          .map((brands) => getChip(brands))
+          .toList();
+    }
+
+    return Column(
+      children: [
+        SizedBox(
+          width: double.maxFinite,
+          height: 60,
+          child:
+              filter != null && selectedManufacturer == null
+                  ? TextFormField(
+                    style: TextStyle(fontSize: 18.0),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed:
+                            clearSelectedManufacturerAndFilterAction.call,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      hintStyle: const TextStyle(fontSize: 16),
+                      labelText: 'Fabricante',
+                      filled: true,
+                    ),
+                    onChanged: filterManufacturerAction.call,
+                    onFieldSubmitted: onFieldSubmitted,
+                  )
+                  : filter != null && selectedManufacturer != null
+                  ? TextFormField(
+                    style: TextStyle(fontSize: 18.0),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed:
+                            clearSelectedManufacturerAndFilterAction.call,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      hintStyle: const TextStyle(fontSize: 16),
+                      labelText: 'Fabricante',
+                      filled: true,
+                    ),
+                    onChanged: filterManufacturerAction.call,
+                    controller: TextEditingController(
+                      text: selectedManufacturer.name,
+                    ),
+                    onFieldSubmitted: onFieldSubmitted,
+                  )
+                  : TextFormField(
+                    style: TextStyle(fontSize: 18.0),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed:
+                            clearSelectedManufacturerAndFilterAction.call,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide.none,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      hintText: 'Digite a Marca ou CNPJ',
+                      hintStyle: const TextStyle(fontSize: 16),
+                      labelText: 'Fabricante',
+                      filled: true,
+                    ),
+                    onChanged: filterManufacturerAction.call,
+                    controller: TextEditingController(text: ''),
+                    onFieldSubmitted: onFieldSubmitted,
+                  ),
+        ),
+        (filter != null && selectedManufacturer == null)
+            ? SizedBox(
+              height: 200,
+              child: SingleChildScrollView(
+                child: Wrap(
+                  direction: Axis.vertical,
+                  alignment: WrapAlignment.center,
+                  children: [...generateBrands()],
+                ),
+              ),
+            )
+            : const SizedBox(),
+      ],
     );
   }
 }

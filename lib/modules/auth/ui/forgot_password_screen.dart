@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart'; // Import go_router
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../shared/helpers/firebase_errors.dart';
+import '../../../shared/helpers/validators.dart';
 import '../asp/actions.dart';
 import '../asp/atoms.dart';
 import '../providers/states/forgot_password_states.dart';

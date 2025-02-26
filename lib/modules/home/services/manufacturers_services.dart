@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class UnidadesDeMedidasService {
+class ManufacturersServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getUnidadesDeMedidaStream() {
+  Stream<QuerySnapshot<Map<String, dynamic>>> getManufacturersStream() {
     return _firestore
-        .collection("adm_unidades_de_medida")
+        .collection("adm_manufacturers")
         .where('status', isEqualTo: 1)
         .snapshots();
   }

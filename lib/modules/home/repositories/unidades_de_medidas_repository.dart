@@ -4,7 +4,7 @@ import '../services/category_services.dart';
 import '../services/unidades_de_medidas_services.dart';
 
 class UnidadesDeMedidasRepository {
-  final UnidadesDeMedidasRService _unidadesDeMedidaService; // Use service
+  final UnidadesDeMedidasService _unidadesDeMedidaService; // Use service
 
   UnidadesDeMedidasRepository(this._unidadesDeMedidaService);
 

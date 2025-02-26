@@ -1,9 +1,11 @@
 import 'dart:typed_data';
 
+import 'package:adm_botecaria/modules/home/models/gpc_model.dart';
 import 'package:asp/asp.dart';
 import 'package:flutter/widgets.dart';
 
 import '../models/category_model.dart';
+import '../models/manufacturers_model.dart';
 import '../models/unidades_de_medida_model.dart';
 
 // Átomos para os campos do formulário de produto
@@ -26,3 +28,15 @@ final scrollControllerAtom = atom<ScrollController>(ScrollController());
 final isPositionFloatingButtonAtom = atom<bool>(false);
 final categoriesListAtom = atom<List<Categories>>([]);
 final unidadesDeMeddidaListAtom = atom<List<UnidadesDeMedidaModel>>([]);
+final filteredManufacturersListAtom = atom<List<Manufacturer>>([]);
+final filterManufacturersAtom = atom<dynamic>(null);
+final selectedManufacturersAtom = atom<Manufacturer?>(null);
+
+final gpcFamilyListAtom = atom<List<GpcFamilyModel>>([]);
+final gpcFamilySelectedAtom = atom<GpcFamilyModel?>(null);
+
+final gpcClassListAtom = atom<List<GpcClassModel>>([]);
+final gpcClassSelectedAtom = atom<GpcClassModel?>(null);
+
+final gpcBrickListAtom = atom<List<GpcBrickModel>>([]);
+final gpcBrickSelectedAtom = atom<GpcBrickModel?>(null);

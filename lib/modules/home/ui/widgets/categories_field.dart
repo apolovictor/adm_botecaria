@@ -4,13 +4,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../asp/actions.dart';
 import '../../asp/atoms.dart';
-import '../../asp/selectores.dart';
+import '../../asp/selectors.dart';
 import '../../providers/category_icon_provider.dart';
 
 class CategoriesField extends ConsumerWidget {
-  const CategoriesField({super.key, required this.focusNode});
-
-  final FocusNode focusNode;
+  const CategoriesField({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,7 +23,6 @@ class CategoriesField extends ConsumerWidget {
           width: double.maxFinite,
           height: 60,
           child: DropdownButtonFormField(
-            focusNode: focusNode,
             isExpanded: true,
             decoration: InputDecoration(
               label: Text('Categoria'),

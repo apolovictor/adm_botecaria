@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../asp/actions.dart';
 import '../../asp/atoms.dart';
-import '../../asp/selectores.dart';
+import '../../asp/selectors.dart';
 
 class UnidadedMediddaField extends StatelessWidget with HookMixin {
   const UnidadedMediddaField({super.key});
