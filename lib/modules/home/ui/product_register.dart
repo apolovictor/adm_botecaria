@@ -1,30 +1,23 @@
+import 'package:adm_botecaria/modules/home/providers/states/product_states.dart';
 import 'package:adm_botecaria/modules/home/ui/widgets/gpc_bricks_field.dart';
 import 'package:adm_botecaria/modules/home/ui/widgets/gpc_family_field.dart';
 import 'package:asp/asp.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Import para inputFormatters
-
-import '../../../shared/helpers/firebase_errors.dart';
+import 'package:flutter/services.dart';
+import '../../../shared/helpers/validators.dart';
 import '../asp/actions.dart';
 import '../asp/atoms.dart';
-import '../asp/selectors.dart';
 import '../helpers/helpers.dart';
-import '../../../shared/helpers/validators.dart';
 import 'widgets/brand_field.dart';
 import 'widgets/categories_field.dart';
-import 'widgets/cnpj_field.dart';
 import 'widgets/gpc_class_field.dart';
 import 'widgets/medidas_field.dart';
 import 'widgets/specification_table.dart';
-import 'widgets/text_field_widget.dart'; // Import para formatação de moeda
+import 'widgets/text_field_widget.dart';
 
 final _formKey = GlobalKey<FormState>();
 
 class ProductRegister extends StatelessWidget with HookMixin {
-  // final FocusNode focusNodeNCM = FocusNode();
-  // final FocusNode focusNodePreco = FocusNode();
-  // final FocusNode focusNodeCom = FocusNode();
-
   const ProductRegister({super.key});
 
   @override
@@ -36,6 +29,8 @@ class ProductRegister extends StatelessWidget with HookMixin {
     final isPositionFloatingButton = useAtomState(isPositionFloatingButtonAtom);
     final gpcFamilySelected = useAtomState(gpcFamilySelectedAtom);
     final gpcClassSelected = useAtomState(gpcClassSelectedAtom);
+
+    final productState = useAtomState(productStateAtom);
 
     useAtomEffect((get) {
       get(scrollControllerAtom).addListener(() {
@@ -159,26 +154,29 @@ class ProductRegister extends StatelessWidget with HookMixin {
                   onChanged: (value) => setProductCodeAction(value),
                 ),
                 SizedBox(height: 10),
-                getTextField(
-                  labelText: 'GTIN (Código de Barras)',
-                  keyboardType: TextInputType.number,
-                  focusNodeCurrent: focusNodes[1],
-                  validator: cEan,
-                  onFieldSubmitted:
-                      (_) => FocusScope.of(context).requestFocus(focusNodes[2]),
 
-                  onChanged: (value) => setProductEanAction(value),
-                ),
-                SizedBox(height: 10),
                 getTextField(
                   labelText: 'Nome do Produto (Opcional mostrado na NF)',
                   keyboardType: TextInputType.text,
-                  focusNodeCurrent: focusNodes[2],
+                  focusNodeCurrent: focusNodes[1],
                   validator: xProd,
                   onFieldSubmitted:
-                      (_) => FocusScope.of(context).requestFocus(focusNodes[3]),
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[2]),
 
                   onChanged: (value) => setProductNameAction(value),
+                ),
+                SizedBox(height: 10),
+                getTextField(
+                  labelText: 'GTIN (Código de Barras)',
+                  keyboardType: TextInputType.number,
+                  focusNodeCurrent: focusNodes[2],
+
+                  validator: cEan,
+                  onFieldSubmitted:
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[3]),
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  onChanged:
+                      (value) => setProductEanAction(double.tryParse(value)),
                 ),
                 SizedBox(height: 10),
                 getTextField(
@@ -191,22 +189,13 @@ class ProductRegister extends StatelessWidget with HookMixin {
                   onFieldSubmitted:
                       (_) => FocusScope.of(context).requestFocus(focusNodes[4]),
 
-                  onChanged: (value) => setProductNCMAction(value),
-                ),
-                SizedBox(height: 10),
-                getTextField(
-                  labelText: 'GPC Code',
-                  keyboardType: TextInputType.text,
-                  focusNodeCurrent: focusNodes[4],
-                  onFieldSubmitted:
-                      (_) => FocusScope.of(context).requestFocus(focusNodes[5]),
-
-                  onChanged: (value) => setProductGpcCodeAction(value),
+                  onChanged:
+                      (value) => setProductNCMAction(double.tryParse(value)),
                 ),
                 SizedBox(height: 10),
 
                 //!! DropDown
-                GpcFamilyField(focusNode: focusNodes[5]),
+                GpcFamilyField(focusNode: focusNodes[4]),
                 SizedBox(height: 10),
                 gpcFamilySelected != null ? GpcClassField() : SizedBox(),
                 gpcFamilySelected != null ? SizedBox(height: 10) : SizedBox(),
@@ -217,9 +206,9 @@ class ProductRegister extends StatelessWidget with HookMixin {
                 UnidadedMediddaField(),
                 SizedBox(height: 10),
                 BrandField(
-                  focusNode: focusNodes[6],
+                  focusNode: focusNodes[5],
                   onFieldSubmitted:
-                      (_) => FocusScope.of(context).requestFocus(focusNodes[7]),
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[6]),
                 ),
                 SizedBox(height: 10),
                 //!! validator max length 7
@@ -228,45 +217,47 @@ class ProductRegister extends StatelessWidget with HookMixin {
                   keyboardType: TextInputType.number,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   validator: cest,
-                  focusNodeCurrent: focusNodes[7],
+                  focusNodeCurrent: focusNodes[6],
                   onFieldSubmitted:
-                      (_) => FocusScope.of(context).requestFocus(focusNodes[8]),
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[7]),
 
-                  onChanged: (value) => setProductCESTAction(value),
+                  onChanged:
+                      (value) => setProductCESTAction(double.tryParse(value)),
                 ),
                 SizedBox(height: 10),
                 getTextField(
-                  labelText: 'Preço médio unitário',
+                  labelText: 'Preço médio unitário (Interno)',
                   keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-
-                  focusNodeCurrent: focusNodes[8],
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly,
+                    CurrencyInputFormatter(),
+                  ],
+                  focusNodeCurrent: focusNodes[7],
                   onFieldSubmitted:
-                      (_) => FocusScope.of(context).requestFocus(focusNodes[9]),
-
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[8]),
                   onChanged: (value) {
-                    final parsedValue = double.tryParse(value);
-                    if (parsedValue != null) {
-                      setProductAverageUnitPriceAction(parsedValue);
-                    }
+                    String cleanedValue = value
+                        .replaceAll('R\$', '')
+                        .replaceAll('.', '');
+                    setProductAverageUnitPriceAction(cleanedValue);
                   },
                 ),
                 SizedBox(height: 10),
                 getTextField(
-                  labelText: 'Preço médio de venda',
+                  labelText: 'Preço médio de venda (Interno)',
                   keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-
-                  focusNodeCurrent: focusNodes[9],
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly,
+                    CurrencyInputFormatter(),
+                  ],
+                  focusNodeCurrent: focusNodes[8],
                   onFieldSubmitted:
-                      (_) =>
-                          FocusScope.of(context).requestFocus(focusNodes[10]),
-
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[9]),
                   onChanged: (value) {
-                    final parsedValue = double.tryParse(value);
-                    if (parsedValue != null) {
-                      setProductAverageSellPriceAction(parsedValue);
-                    }
+                    String cleanedValue = value
+                        .replaceAll('R\$', '')
+                        .replaceAll('.', '');
+                    setProductAverageSellPriceAction(cleanedValue);
                   },
                 ),
                 SizedBox(height: 10),
@@ -274,12 +265,9 @@ class ProductRegister extends StatelessWidget with HookMixin {
                 getTextField(
                   labelText: 'Descrição',
                   keyboardType: TextInputType.multiline,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   maxLines: 3,
-
-                  focusNodeCurrent: focusNodes[10],
-
-                  onChanged: (value) => setProductDescricaoAction(value),
+                  focusNodeCurrent: focusNodes[9],
+                  onChanged: (value) => setProductDesciptionAction(value),
                 ),
 
                 SizedBox(height: 10),
@@ -290,29 +278,33 @@ class ProductRegister extends StatelessWidget with HookMixin {
                     width: double.infinity,
                     height: 60,
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // Aqui você pode acessar os valores dos controllers e criar o objeto Product
-
-                          //Register product
-                        } else {
-                          return;
-                        }
-                      },
+                      onPressed:
+                          productState is ProductStatusStateLoadingAdding
+                              ? null
+                              : () {
+                                if (_formKey.currentState!.validate()) {
+                                  addProductAction();
+                                } else {
+                                  return;
+                                }
+                              },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         backgroundColor: Colors.black87,
                       ),
-                      child: const Text(
-                        'Salvar',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+                      child:
+                          productState is ProductStatusStateLoadingAdding
+                              ? CircularProgressIndicator(color: Colors.white)
+                              : const Text(
+                                'Salvar',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                     ),
                   ),
                 ),

@@ -134,7 +134,6 @@ final getGpcBrickSelector = selector((get) {
       );
 
   bricksStream.listen((gpcBrick) {
-    print("gpcBrick ===== ${gpcBrick.length}");
     addGpcBrickToListAction(gpcBrick);
   });
 });

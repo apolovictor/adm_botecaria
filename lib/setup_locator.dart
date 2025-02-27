@@ -5,10 +5,12 @@ import 'modules/auth/services/auth_service.dart';
 import 'modules/home/repositories/category_repository.dart';
 import 'modules/home/repositories/gpc_repository.dart';
 import 'modules/home/repositories/manufacturers_repository.dart';
+import 'modules/home/repositories/product_repository.dart';
 import 'modules/home/repositories/unidades_de_medidas_repository.dart';
 import 'modules/home/services/category_services.dart';
 import 'modules/home/services/gpc_services.dart';
 import 'modules/home/services/manufacturers_services.dart';
+import 'modules/home/services/product_services.dart';
 import 'modules/home/services/unidades_de_medidas_services.dart';
 
 final getIt = GetIt.instance;
@@ -24,6 +26,7 @@ void setupLocator() {
     () => ManufacturersServices(),
   );
   getIt.registerLazySingleton<GpcService>(() => GpcService());
+  getIt.registerLazySingleton<ProductServices>(() => ProductServices());
 
   // Register my concrete repositories
 
@@ -42,6 +45,9 @@ void setupLocator() {
   );
   getIt.registerLazySingleton<GpcRepository>(
     () => GpcRepository(getIt<GpcService>()),
+  );
+  getIt.registerLazySingleton<ProductRepository>(
+    () => ProductRepository(getIt<ProductServices>()),
   );
 
   // getIt.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);

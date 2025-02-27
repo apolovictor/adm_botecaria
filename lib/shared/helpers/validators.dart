@@ -1,4 +1,6 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
@@ -15,6 +17,9 @@ String? cEan(String? value) {
   if (value != null && value.isNotEmpty) {
     if (value.length < 12 || value.length > 13) {
       return "Deve conter pelo menos 12 números e no máximo 13 ";
+    }
+    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+      return 'Deve conter apenas números.';
     }
   }
   return null;
@@ -115,6 +120,29 @@ String? validateQuantity(String? value) {
   return null;
 }
 
+class CurrencyInputFormatter extends TextInputFormatter {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.selection.baseOffset == 0) {
+      // print(true);
+      return newValue;
+    }
+
+    double value = double.parse(newValue.text);
+
+    final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
+
+    String newText = formatter.format(value / 100);
+
+    return newValue.copyWith(
+      text: newText,
+      selection: new TextSelection.collapsed(offset: newText.length),
+    );
+  }
+}
+
 MaskTextInputFormatter maskCnpjFormatter() => MaskTextInputFormatter(
   mask: '##.###.###/####-##',
   filter: {"#": RegExp(r'[0-9]')},
@@ -122,10 +150,8 @@ MaskTextInputFormatter maskCnpjFormatter() => MaskTextInputFormatter(
 MaskTextInputFormatter maskCepFormatter() =>
     MaskTextInputFormatter(mask: '#####-###', filter: {"#": RegExp(r'[0-9]')});
 
-MaskTextInputFormatter maskCpfFormatter() => MaskTextInputFormatter(
-  mask: '###.###.###-##',
-  filter: {"#": RegExp(r'[0-9]')},
-);
+MaskTextInputFormatter maskPriceFormatter() =>
+    MaskTextInputFormatter(mask: 'R\$ ', filter: {"#": RegExp(r'[0-9]')});
 
 MaskTextInputFormatter maskPhoneFormatter() => MaskTextInputFormatter(
   mask: '(##) #####-####',

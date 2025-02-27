@@ -14,7 +14,9 @@ class GpcBricksField extends StatelessWidget with HookMixin {
 
     final gpcBrickList = useAtomState(gpcBrickListAtom);
     if (gpcBrickList.isNotEmpty) {
-      gpcBrickList.sort((a, b) => a.descricaoBrick.compareTo(b.descricaoBrick));
+      gpcBrickList.sort(
+        (a, b) => a.brickDescription.compareTo(b.brickDescription),
+      );
     }
     return gpcBrickList.isNotEmpty
         ? SizedBox(
@@ -43,7 +45,10 @@ class GpcBricksField extends StatelessWidget with HookMixin {
                 gpcBrickList.map((e) {
                   return DropdownMenuItem(
                     value: e,
-                    child: SizedBox(height: 50, child: Text(e.descricaoBrick)),
+                    child: SizedBox(
+                      height: 50,
+                      child: Text(e.brickDescription),
+                    ),
                   );
                 }).toList(),
           ),

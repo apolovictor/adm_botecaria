@@ -1,9 +1,11 @@
+import 'package:adm_botecaria/modules/home/providers/states/product_states.dart';
 import 'package:asp/asp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../shared/widgets/overlay_snackbar.dart';
+import '../../home/asp/atoms.dart';
 import '../asp/actions.dart';
 import '../asp/atoms.dart';
 import 'states/login_states.dart';
@@ -22,10 +24,23 @@ class LayoutScaffold extends StatelessWidget with HookMixin {
   @override
   Widget build(BuildContext context) {
     final authState = useAtomState(loginStateAtom);
+    final productState = useAtomState(productStateAtom);
 
     if (authState is LoginStateError) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         showOverlaySnackbar(context, authState.errorMessage);
+      });
+    }
+    if (productState is ProductStatusStateAdded) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        context.go('/home');
+        showOverlaySnackbar(context, 'Produto adicionado com sucesso!');
+      });
+    }
+    if (productState is ProductStatusStateAddingError) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        context.go('/home');
+        showOverlaySnackbar(context, productState.errorMessage);
       });
     }
 

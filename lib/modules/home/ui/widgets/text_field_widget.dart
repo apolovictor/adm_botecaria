@@ -5,6 +5,7 @@ Widget getTextField({
   required String labelText,
   required TextInputType keyboardType,
   String? Function(String?)? validator,
+  String? prefixText,
   FocusNode? focusNodeCurrent,
   FocusNode? focusNodeNext,
   Function(String)? onFieldSubmitted,
@@ -20,12 +21,14 @@ Widget getTextField({
     keyboardType: keyboardType,
     focusNode: focusNodeCurrent,
     enabled: enablefield,
+    inputFormatters: inputFormatters,
     textInputAction: TextInputAction.next,
     onFieldSubmitted: onFieldSubmitted,
     onTap: callback,
     onChanged: onChanged,
     validator: validator,
     decoration: InputDecoration(
+      prefixText: prefixText,
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide.none,
         borderRadius: BorderRadius.circular(12),

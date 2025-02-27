@@ -1,10 +1,16 @@
 import 'dart:typed_data';
 
 import 'package:adm_botecaria/modules/home/models/gpc_model.dart';
+import 'package:adm_botecaria/modules/home/models/products_model.dart';
 import 'package:asp/asp.dart';
+import 'package:flutter/rendering.dart';
+import '../../../setup_locator.dart';
 import '../models/category_model.dart';
 import '../models/manufacturers_model.dart';
 import '../models/unidades_de_medida_model.dart';
+import '../providers/states/product_states.dart';
+import '../repositories/product_repository.dart';
+import '../services/product_services.dart';
 import 'atoms.dart';
 
 // Actions para modificar os átomos dos campos de produto
@@ -17,41 +23,39 @@ final clearProductImageAction = atomAction((set) {
 final setProductCodeAction = atomAction1<String>((set, value) {
   set(productCodeAtom, value);
 });
-final setProductEanAction = atomAction1<String>((set, value) {
+final setProductEanAction = atomAction1<double?>((set, value) {
   set(productEanAtom, value);
 });
 final setProductNameAction = atomAction1<String>((set, value) {
   set(productNameAtom, value);
 });
-final setProductNCMAction = atomAction1<String>((set, value) {
+final setProductNCMAction = atomAction1<double?>((set, value) {
   set(productNCMAtom, value);
 });
-final setProductGpcCodeAction = atomAction1<String>((set, value) {
-  set(productGpcCodeAtom, value);
-});
-final setProductCategoriaAction = atomAction1<String>((set, value) {
-  set(productCategoriaAtom, value);
+
+final setProductCategoriaAction = atomAction1<Categories>((set, value) {
+  set(productCategoryaAtom, value);
 });
 final setProductUComAction = atomAction1<String>((set, value) {
   set(productUComAtom, value);
 });
 final setProductMarcaAction = atomAction1<String>((set, value) {
-  set(productMarcaAtom, value);
+  set(productManufacturerBrandAtom, value);
 });
 final setProductCNPJFabAction = atomAction1<String>((set, value) {
   set(productCNPJFabAtom, value);
 });
-final setProductCESTAction = atomAction1<String>((set, value) {
+final setProductCESTAction = atomAction1<double?>((set, value) {
   set(productCESTAtom, value);
 });
-final setProductAverageSellPriceAction = atomAction1<double>((set, value) {
+final setProductAverageSellPriceAction = atomAction1<String>((set, value) {
   set(productPrecoMedioVendaAtom, value);
 });
-final setProductAverageUnitPriceAction = atomAction1<double>((set, value) {
+final setProductAverageUnitPriceAction = atomAction1<String>((set, value) {
   set(productPrecoMedioUnitarioAtom, value);
 });
-final setProductDescricaoAction = atomAction1<String>((set, value) {
-  set(productDescricaoAtom, value);
+final setProductDesciptionAction = atomAction1<String>((set, value) {
+  set(productDescriptionAtom, value);
 });
 
 final setPositionFloatingButtonAction = atomAction1<bool>((set, value) {
@@ -124,4 +128,56 @@ final setGpcClassSelectedAction = atomAction1<GpcClassModel>((set, value) {
 
 final setGpcBrickSelectedAction = atomAction1<GpcBrickModel>((set, value) {
   set(gpcBrickSelectedAtom, value);
+});
+
+final addProductAction = atomAction((set) async {
+  setProductStateAction(ProductStatusStateLoadingAdding());
+
+  final ProductRepository productRepository = ProductRepository(
+    getIt<ProductServices>(),
+  );
+
+  double? productPrecoMedioUnitario = double.tryParse(
+    productPrecoMedioUnitarioAtom.state.replaceAll(',', '.'),
+  );
+  double? productPrecoMedioVenda = double.tryParse(
+    productPrecoMedioVendaAtom.state.replaceAll(',', '.'),
+  );
+
+  final product = Product(
+    cProd: productCodeAtom.state.toUpperCase().trim(),
+    cEAN: productEanAtom.state,
+    xProd: productNameAtom.state.toUpperCase().trim(),
+    NCM: productNCMAtom.state,
+    gpcFamilyCode: gpcFamilySelectedAtom.state?.familyCode,
+    gpcFamilyDescription: gpcFamilySelectedAtom.state?.familyDescription.trim(),
+    gpcClassCode: gpcClassSelectedAtom.state?.classCode,
+    gpcClassDescription: gpcClassSelectedAtom.state?.classDescription.trim(),
+    gpcBrickCode: gpcBrickSelectedAtom.state?.brickCode,
+    gpcBrickDescription: gpcBrickSelectedAtom.state?.brickDescription.trim(),
+    gpcBrickDefinition: gpcBrickSelectedAtom.state?.brickDefinition.trim(),
+    category: productCategoryaAtom.state.documentId,
+    categoryName: productCategoryaAtom.state.iconName,
+    uCom: productUComAtom.state.trim(),
+    imageUrl: '',
+    manufacturerBrand: selectedManufacturersAtom.state?.name.trim(),
+    CNPJFab: selectedManufacturersAtom.state?.cnpj,
+    manufacturerImageUrl: selectedManufacturersAtom.state?.imageUrl,
+    CEST: productCESTAtom.state,
+    precoMedioUnitario: productPrecoMedioUnitario,
+    precoMedioVenda: productPrecoMedioVenda,
+    description: productDescriptionAtom.state.trim(),
+  );
+
+  try {
+    await productRepository.addProduct(product, selectedImageState.state);
+    setProductStateAction(ProductStatusStateAdded());
+  } catch (e) {
+    print('e ==== ${e}');
+    setProductStateAction(ProductStatusStateAddingError(e.toString()));
+  }
+});
+
+final setProductStateAction = atomAction1<ProductStatusState>((set, value) {
+  set(productStateAtom, value);
 });

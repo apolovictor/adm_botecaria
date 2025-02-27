@@ -25,7 +25,7 @@ class CategoriesField extends ConsumerWidget {
           child: DropdownButtonFormField(
             isExpanded: true,
             decoration: InputDecoration(
-              label: Text('Categoria'),
+              label: Text('Categoria (Interno)'),
               labelStyle: const TextStyle(fontSize: 16, color: Colors.black54),
               floatingLabelBehavior: FloatingLabelBehavior.always,
               focusedBorder: OutlineInputBorder(
@@ -40,7 +40,7 @@ class CategoriesField extends ConsumerWidget {
               // hintText: productCategory,
             ),
             // value: widget.category,
-            onChanged: (value) => setProductCategoriaAction(value!.iconName),
+            onChanged: (value) => setProductCategoriaAction(value!),
             items:
                 categoriesList.map((e) {
                   final asyncSvgOptionsWidget = ref.watch(

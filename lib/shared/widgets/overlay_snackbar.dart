@@ -8,7 +8,7 @@ void showOverlaySnackbar(BuildContext context, String message) {
     builder:
         (context) => Positioned(
           top: 50,
-          right: 10,
+          right: 5,
           child: Material(
             // adding transparent to apply custom border
             color: Colors.transparent,
@@ -25,7 +25,7 @@ void showOverlaySnackbar(BuildContext context, String message) {
                   const SizedBox(width: 10),
                   Text(
                     message,
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
                   ),
                   const SizedBox(width: 30),
                 ],

@@ -1,17 +1,27 @@
 class Product {
   // Identificação do Produto (Iremos buscar parametrizar todos os campos)
   String cProd; // Obrigatorio tambem para Informações do laioute  da NFC-e
-  String? cEAN; // Obrigatorio tambem para Informações do laioute  da NFC-e
+  double? cEAN; // Obrigatorio tambem para Informações do laioute  da NFC-e
   String? xProd;
-  String? NCM; // Obrigatorio tambem para Informações do laioute  da NFC-e
+  double? NCM; // Obrigatorio tambem para Informações do laioute  da NFC-e
 
   // Informações adicionais
   String? imageUrl;
-  String? categoria; // Categoria do produto
-  String? gpcCode; // Código GPC (Global Product Classification) -
-  String? marca; // Marca do produto
-  String? descricao; // Descrição detalhada do produto
+  String? category; // Category do produto
+  String? categoryName; // Category do produto
+  int? gpcSegmentCode; // Código GPC (Global Product Classification) -
+  String? gpcSegmentDescription; // Código GPC (Global Product Classification) -
+  int? gpcFamilyCode; // Código GPC (Global Product Classification) -
+  String? gpcFamilyDescription; // Código GPC (Global Product Classification) -
+  int? gpcClassCode; // Código GPC (Global Product Classification) -
+  String? gpcClassDescription; // Código GPC (Global Product Classification) -
+  int? gpcBrickCode; // Código GPC (Global Product Classification) -
+  String? gpcBrickDescription; // Código GPC (Global Product Classification) -
+  String? gpcBrickDefinition; // Código GPC (Global Product Classification) -
+  String? manufacturerBrand; // Marca do produto
   List<dynamic>? CNPJFab;
+  String? manufacturerImageUrl;
+  String? description; // Descrição detalhada do produto
 
   //Preços médios - Informações adicionais
   double? precoMedioUnitario; // Preço médio unitário calculado
@@ -20,7 +30,7 @@ class Product {
   //Informações do laioute e Regras de Validação da NFC-e (obrigatorios)
   int CFOP = 5102;
   String? uCom; //unidade comercial
-  String? CEST;
+  double? CEST;
 
   // Tributação - Informações adicionais inicializados com null
   String? indEscala;
@@ -57,45 +67,39 @@ class Product {
     this.xProd,
     this.NCM,
     this.imageUrl,
-    this.categoria,
-    this.gpcCode,
-    this.marca,
+    this.category,
+    this.categoryName,
+    this.gpcSegmentCode,
+    this.gpcSegmentDescription,
+    this.gpcFamilyCode,
+    this.gpcFamilyDescription,
+    this.gpcClassCode,
+    this.gpcClassDescription,
+    this.gpcBrickCode,
+    this.gpcBrickDescription,
+    this.gpcBrickDefinition,
+    this.manufacturerBrand,
     this.CNPJFab,
-    this.descricao,
+    this.manufacturerImageUrl,
+    this.description,
     this.precoMedioUnitario,
     this.precoMedioVenda,
     this.uCom,
     this.CEST,
     this.indTot = 1,
   });
-  //Validação do NCM (agora SEMPRE obrigatório se cProd não for nulo)
-  String? validateNCM() {
-    if (cProd == null || cProd.isEmpty) {
-      return null; //Nao executa validações
-    } else if (NCM == null || NCM!.isEmpty) {
-      return 'O campo NCM é obrigatório e deve ter 8 dígitos.';
-    }
-    return null; // NCM válido
-  }
-
-  //Validação dos campos
-  String? validateField(String? value) {
-    if (cProd != null) {
-      if (value == null || value.isEmpty) {
-        return 'O campo é obrigatório para emissão da NFe.';
-      }
-    }
-    return null; // Valido quando o codeProduct for valido
-  }
 
   //Monitora se todos os campos essenciais estão preenchidos
   bool allEssentialFieldsFilled() {
     return (xProd != null &&
         NCM != null &&
         uCom != null &&
-        categoria != null &&
-        gpcCode != null &&
-        marca != null &&
+        category != null &&
+        gpcSegmentCode != null &&
+        gpcFamilyCode != null &&
+        gpcClassCode != null &&
+        gpcBrickCode != null &&
+        manufacturerBrand != null &&
         qCom != null &&
         vUnCom != null &&
         vProd != null);
@@ -116,88 +120,84 @@ class Product {
     if (xProd == null || xProd!.isEmpty) {
       pendencias.add("Campo xProd Obrigatório");
     }
-    if (NCM == null || NCM!.isEmpty) {
+    if (NCM == null) {
       pendencias.add("Campo NCM Obrigatório");
     }
     if (uCom == null || uCom!.isEmpty) {
       pendencias.add("Campo uCom Obrigatório");
     }
-    if (categoria == null || categoria!.isEmpty) {
-      pendencias.add("Campo Categoria Obrigatório");
+    if (category == null || category!.isEmpty) {
+      pendencias.add("Campo Category Obrigatório");
     }
-    if (gpcCode == null || gpcCode!.isEmpty) {
-      pendencias.add("Campo GpcCode Obrigatório");
+
+    if (gpcFamilyCode == null) {
+      pendencias.add("Campo Gpc Família Obrigatório");
     }
-    if (marca == null || marca!.isEmpty) {
+    if (gpcClassCode == null) {
+      pendencias.add("Campo Gpc Classe Obrigatório");
+    }
+    if (gpcBrickCode == null) {
+      pendencias.add("Campo GPC Brick Obrigatório");
+    }
+    if (manufacturerBrand == null || manufacturerBrand!.isEmpty) {
       pendencias.add("Campo marca Obrigatório");
-    }
-    if (vProd == null) {
-      pendencias.add("Campo valor total Obrigatório");
     }
 
     return pendencias;
   }
 
-  //Retorna texto
-  String textoPending() {
-    List<String> pendencias = checkPending();
-    String result = "";
-    for (String pendencia in pendencias) {
-      result += " - " + pendencia;
-    }
-    return result;
-  }
-
-  //Monitoramento (estado do preenchimento)
+  //Monitoramento campos obrigatórios (estado do preenchimento)
   double get completionPercentage {
-    int totalFields = 25; //Total de campos essenciais
+    int totalFields = 1; //Total de campos essenciais
     int filledFields = 1; //Total de campos preenchidos
+    if (imageUrl != null) {
+      filledFields++;
+      totalFields++;
+    }
+    if (xProd != null && xProd!.isNotEmpty) {
+      filledFields++;
+      totalFields++;
+    }
+    if (cEAN != null) {
+      filledFields++;
+      totalFields++;
+    }
+    if (NCM != null) {
+      filledFields++;
+      totalFields++;
+    }
+    if (gpcFamilyCode != null) {
+      filledFields++;
+      totalFields++;
+    }
+    if (gpcClassCode != null) {
+      filledFields++;
+      totalFields++;
+    }
+    if (gpcBrickCode != null) {
+      filledFields++;
+      totalFields++;
+    }
+    if (category != null && category!.isNotEmpty) {
+      filledFields++;
+      totalFields++;
+    }
+    if (uCom != null && uCom!.isNotEmpty) {
+      filledFields++;
+      totalFields++;
+    }
 
-    if (xProd != null && xProd!.isNotEmpty) filledFields++;
-    if (NCM != null && NCM!.isNotEmpty) filledFields++;
-
-    if (categoria != null && categoria!.isNotEmpty) filledFields++;
-    if (gpcCode != null && gpcCode!.isNotEmpty) filledFields++;
-    if (marca != null && marca!.isNotEmpty) filledFields++;
-
+    if ((manufacturerBrand != null && manufacturerBrand!.isNotEmpty) ||
+        (CNPJFab != null)) {
+      filledFields++;
+      totalFields++;
+    }
     //Verifica campos adicionais e opcionais para tributação ST
     if (CEST != null) {
       filledFields++;
       totalFields++;
     }
-    if (indEscala != null) {
-      filledFields++;
-      totalFields++;
-    }
-    if (CNPJFab != null) {
-      filledFields++;
-      totalFields++;
-    }
-    if (cBenef != null) {
-      filledFields++;
-      totalFields++;
-    }
 
-    if (qVol != null) {
-      filledFields++;
-      totalFields++;
-    }
-    if (uTrib != null) {
-      filledFields++;
-      totalFields++;
-    }
-    if (qTrib != null) {
-      filledFields++;
-      totalFields++;
-    }
-    if (vUnTrib != null) {
-      filledFields++;
-      totalFields++;
-    }
-    if (imageUrl != null) {
-      filledFields++;
-      totalFields++;
-    }
     if (precoMedioUnitario != null) {
       filledFields++;
       totalFields++;
@@ -210,15 +210,9 @@ class Product {
     return (filledFields / totalFields).clamp(0.0, 1.0);
   }
 
-  //Função para exibir valor para monitoramento
-  String getCompletionStatus() {
-    double percentage = completionPercentage * 100;
-    return '${percentage.toStringAsFixed(0)}% preenchidos ${textoPending()}';
-  }
-
   @override
   String toString() {
-    return 'Product{cProd: $cProd, cEAN: $cEAN, xProd: $xProd, NCM: $NCM, EXTIPI: $EXTIPI, CFOP: $CFOP, CEST: $CEST, indEscala: $indEscala, CNPJFab: $CNPJFab, cBenef: $cBenef, \nimageUrl:$imageUrl,\ncategoria: $categoria, gpcCode: $gpcCode, marca: $marca,\ndescricao: $descricao, precoMedioUnitario: $precoMedioUnitario,precoMedioVenda: $precoMedioVenda,}';
+    return 'Product{cProd: $cProd, cEAN: $cEAN, xProd: $xProd, NCM: $NCM, EXTIPI: $EXTIPI, CFOP: $CFOP, CEST: $CEST, indEscala: $indEscala, CNPJFab: $CNPJFab, cBenef: $cBenef, \nimageUrl:$imageUrl,\ncategory: $category, categoryName: $categoryName, gpcSegmentCode: $gpcSegmentCode, gpcFamilyCode: $gpcFamilyCode, gpcClassCode: $gpcClassCode, gpcBrickCode: $gpcBrickCode, manufacturerBrand: $manufacturerBrand,\ndescription: $description, precoMedioUnitario: $precoMedioUnitario,precoMedioVenda: $precoMedioVenda,}';
   }
 
   Map<String, dynamic> toMap() => {
@@ -241,14 +235,23 @@ class Product {
     'qTrib': qTrib,
     'vUnTrib': vUnTrib,
     'imageUrl': imageUrl,
-    'categoria': categoria,
-    'gpcCode': gpcCode,
-    'marca': marca,
-    'descricao': descricao,
+    'manufacturerImageUrl': manufacturerImageUrl,
+    'category': category,
+    'categoryName': categoryName,
+    'gpcSegmentCode': 50000000,
+    'gpcSegmentDescription': 'Alimentos Bebidas',
+    'gpcFamilyCode': gpcFamilyCode,
+    'gpcFamilyDescription': gpcFamilyDescription,
+    'gpcClassCode': gpcClassCode,
+    'gpcClassDescription': gpcClassDescription,
+    'gpcBrickCode': gpcBrickCode,
+    'gpcBrickDescription': gpcBrickDescription,
+    'gpcBrickDefinition': gpcBrickDefinition,
+    'manufacturerBrand': manufacturerBrand,
+    'description': description,
     'precoMedioUnitario': precoMedioUnitario,
     'precoMedioVenda': precoMedioVenda,
     'completionPercentage': completionPercentage,
-    'textoPending': textoPending(),
     'nLote': nLote,
     'dFab': dFab,
     'dVal': dVal,
@@ -325,11 +328,11 @@ final List<ProductSpecification> productSpecifications = [
         'Código GPC (Global Product Classification). Deixe em branco se não houver.',
   ),
   ProductSpecification(
-    campo: 'categoria',
+    campo: 'category',
     tipo: 'String?',
-    labelText: 'Categoria',
+    labelText: 'Category',
     resumo:
-        'Categoria do produto (ex: "Cerveja", "Refrigerante", "Lanche"). Deixe em branco se não houver',
+        'Category do produto (ex: "Cerveja", "Refrigerante", "Lanche"). Deixe em branco se não houver',
   ),
   ProductSpecification(
     campo: 'uCom',
@@ -371,3 +374,70 @@ final List<ProductSpecification> productSpecifications = [
     resumo: 'Descrição detalhada do produto. *Obrigatório*.',
   ),
 ];
+
+
+//  //Monitoramento (estado do preenchimento)
+//   double get completionPercentage {
+//     int totalFields = 25; //Total de campos essenciais
+//     int filledFields = 1; //Total de campos preenchidos
+
+//     if (xProd != null && xProd!.isNotEmpty) filledFields++;
+//     if (NCM != null) filledFields++;
+
+//     if (category != null && category!.isNotEmpty) filledFields++;
+//     if (gpcSegmentCode != null) filledFields++;
+//     if (gpcFamilyCode != null) filledFields++;
+//     if (gpcClassCode != null) filledFields++;
+//     if (gpcBrickCode != null) filledFields++;
+//     if (manufacturerBrand != null && manufacturerBrand!.isNotEmpty)
+//       filledFields++;
+
+//     //Verifica campos adicionais e opcionais para tributação ST
+//     if (CEST != null) {
+//       filledFields++;
+//       totalFields++;
+//     }
+//     if (indEscala != null) {
+//       filledFields++;
+//       totalFields++;
+//     }
+//     if (CNPJFab != null) {
+//       filledFields++;
+//       totalFields++;
+//     }
+//     if (cBenef != null) {
+//       filledFields++;
+//       totalFields++;
+//     }
+
+//     if (qVol != null) {
+//       filledFields++;
+//       totalFields++;
+//     }
+//     if (uTrib != null) {
+//       filledFields++;
+//       totalFields++;
+//     }
+//     if (qTrib != null) {
+//       filledFields++;
+//       totalFields++;
+//     }
+//     if (vUnTrib != null) {
+//       filledFields++;
+//       totalFields++;
+//     }
+//     if (imageUrl != null) {
+//       filledFields++;
+//       totalFields++;
+//     }
+//     if (precoMedioUnitario != null) {
+//       filledFields++;
+//       totalFields++;
+//     }
+//     if (precoMedioVenda != null) {
+//       filledFields++;
+//       totalFields++;
+//     }
+
+//     return (filledFields / totalFields).clamp(0.0, 1.0);
+//   }

@@ -1,5 +1,6 @@
 class GpcBrickModel {
   final int brickCode;
+  final String brickDescription;
   final String brickDefinition;
   final int classCode;
   final String classDescription;
@@ -7,11 +8,11 @@ class GpcBrickModel {
   final String familyDescription;
   final int segmentCode;
   final String segmentDescription;
-  final String descricaoBrick;
   final String documentId;
 
   GpcBrickModel({
     required this.brickCode,
+    required this.brickDescription,
     required this.brickDefinition,
     required this.classCode,
     required this.classDescription,
@@ -19,7 +20,6 @@ class GpcBrickModel {
     required this.familyDescription,
     required this.segmentCode,
     required this.segmentDescription,
-    required this.descricaoBrick,
     required this.documentId,
   });
 
@@ -27,6 +27,7 @@ class GpcBrickModel {
   factory GpcBrickModel.fromDoc(dynamic doc) {
     return GpcBrickModel(
       brickCode: doc.data()!['brickCode'],
+      brickDescription: doc.data()!['brickDescription'] ?? '',
       brickDefinition: doc.data()!['brickDefinition'],
       classCode: doc.data()!['classCode'],
       classDescription: doc.data()!['classDescription'],
@@ -34,7 +35,6 @@ class GpcBrickModel {
       familyDescription: doc.data()!['familyDescription'],
       segmentCode: doc.data()!['segmentCode'],
       segmentDescription: doc.data()!['segmentDescription'],
-      descricaoBrick: doc.data()!['descricaoBrick'],
       documentId: doc.id,
     );
   }
