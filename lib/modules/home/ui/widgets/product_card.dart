@@ -20,15 +20,15 @@ class ProductCard extends StatelessWidget {
       width: double.maxFinite,
       child: Stack(
         children: [
-          Positioned(
-            left: 5,
-            top: 0,
-            bottom: 0,
-            child: CircleAvatar(
-              radius: 50,
-              child: ProductCardImage(product: product),
-            ),
-          ),
+          // Positioned(
+          //   left: 5,
+          //   top: 0,
+          //   bottom: 0,
+          //   child: CircleAvatar(
+          //     radius: 50,
+          //     child: ProductCardImage(product: product),
+          //   ),
+          // ),
           Positioned(
             height: height * 0.15,
             right: 0,
