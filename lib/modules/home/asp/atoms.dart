@@ -12,15 +12,15 @@ import '../providers/states/product_states.dart';
 // Átomos para os campos do formulário de produto
 final selectedImageState = atom<Uint8List?>(null);
 final productCodeAtom = atom<String>('');
-final productEanAtom = atom<double?>(null);
+final productEanAtom = atom<int?>(null);
 final productNameAtom = atom<String>('');
-final productNCMAtom = atom<double?>(null);
+final productNCMAtom = atom<int?>(null);
 
 final productCategoryaAtom = atom<Categories>(Categories.empty());
 final productUComAtom = atom<String>('');
 final productManufacturerBrandAtom = atom<String>('');
 final productCNPJFabAtom = atom<String>('');
-final productCESTAtom = atom<double?>(null);
+final productCESTAtom = atom<int?>(null);
 final productPrecoMedioUnitarioAtom = atom<String>('');
 final productPrecoMedioVendaAtom = atom<String>('');
 final productDescriptionAtom = atom<String>('');

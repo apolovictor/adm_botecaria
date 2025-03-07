@@ -15,8 +15,8 @@ String? cProd(String? value) =>
 
 String? cEan(String? value) {
   if (value != null && value.isNotEmpty) {
-    if (value.length < 12 || value.length > 13) {
-      return "Deve conter pelo menos 12 números e no máximo 13 ";
+    if (value.length < 8 || value.length > 13) {
+      return "Deve conter pelo menos 8 números e no máximo 13 ";
     }
     if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
       return 'Deve conter apenas números.';

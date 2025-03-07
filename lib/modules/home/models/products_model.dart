@@ -1,9 +1,9 @@
 class Product {
   // Identificação do Produto (Iremos buscar parametrizar todos os campos)
   String cProd; // Obrigatorio tambem para Informações do laioute  da NFC-e
-  double? cEAN; // Obrigatorio tambem para Informações do laioute  da NFC-e
+  int? cEAN; // Obrigatorio tambem para Informações do laioute  da NFC-e
   String? xProd;
-  double? NCM; // Obrigatorio tambem para Informações do laioute  da NFC-e
+  int? NCM; // Obrigatorio tambem para Informações do laioute  da NFC-e
 
   // Informações adicionais
   String? imageUrl;
@@ -30,7 +30,7 @@ class Product {
   //Informações do laioute e Regras de Validação da NFC-e (obrigatorios)
   int CFOP = 5102;
   String? uCom; //unidade comercial
-  double? CEST;
+  int? CEST;
 
   // Tributação - Informações adicionais inicializados com null
   String? indEscala;

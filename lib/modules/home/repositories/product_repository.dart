@@ -14,10 +14,8 @@ class ProductRepository {
         product.toMap(),
         productImage,
       );
-      print(response);
       return response;
     } catch (e) {
-      print('object   ${e}');
       rethrow;
     }
   }
