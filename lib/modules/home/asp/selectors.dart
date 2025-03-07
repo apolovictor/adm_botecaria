@@ -1,5 +1,6 @@
 import 'package:adm_botecaria/modules/home/models/gpc_model.dart';
 import 'package:adm_botecaria/modules/home/models/unidades_de_medida_model.dart';
+import 'package:adm_botecaria/modules/home/providers/states/product_states.dart';
 import 'package:asp/asp.dart';
 
 import '../../../setup_locator.dart';
@@ -146,11 +147,14 @@ final getAdmProductsSelector = selector((get) {
     getIt<ProductServices>(),
   );
 
-  final bricksStream = productRepository.getAdmProducts().map(
+  final productStream = productRepository.getAdmProducts().map(
     (snapshot) => snapshot.docs.map((doc) => Product.fromDoc(doc)).toList(),
   );
 
-  bricksStream.listen((products) {
+  final response = productStream.listen((products) {
+    print("products.length ===== ${products.length}");
     addProductstoAtomListAction(products);
   });
+
+  print("response ===== ${response}");
 });
