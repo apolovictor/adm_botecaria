@@ -181,3 +181,11 @@ final addProductAction = atomAction((set) async {
 final setProductStateAction = atomAction1<ProductStatusState>((set, value) {
   set(productStateAtom, value);
 });
+
+final addProductstoAtomListAction = atomAction1<List<Product>>((set, products) {
+  set(productListAtom, [...products]);
+});
+
+final setSelectedCardAction = atomAction1<int>((set, index) {
+  set(selectedCardAtom, index);
+});

@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../models/products_model.dart';
 import '../services/product_services.dart';
 
@@ -18,5 +20,9 @@ class ProductRepository {
     } catch (e) {
       rethrow;
     }
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getAdmProducts() {
+    return productService.getAdmProducts();
   }
 }

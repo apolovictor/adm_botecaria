@@ -1,3 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../shared/utils/const.dart';
+
 class Product {
   // Identificação do Produto (Iremos buscar parametrizar todos os campos)
   String cProd; // Obrigatorio tambem para Informações do laioute  da NFC-e
@@ -22,6 +26,7 @@ class Product {
   List<dynamic>? CNPJFab;
   String? manufacturerImageUrl;
   String? description; // Descrição detalhada do produto
+  double? completionPercentage; // Add this line
 
   //Preços médios - Informações adicionais
   double? precoMedioUnitario; // Preço médio unitário calculado
@@ -82,6 +87,7 @@ class Product {
     this.CNPJFab,
     this.manufacturerImageUrl,
     this.description,
+    this.completionPercentage,
     this.precoMedioUnitario,
     this.precoMedioVenda,
     this.uCom,
@@ -147,65 +153,55 @@ class Product {
   }
 
   //Monitoramento campos obrigatórios (estado do preenchimento)
-  double get completionPercentage {
-    int totalFields = 1; //Total de campos essenciais
+  double get getCompletionPercentage {
+    int totalFields = requiredFields; //Total de campos essenciais
     int filledFields = 1; //Total de campos preenchidos
     if (imageUrl != null) {
       filledFields++;
-      totalFields++;
     }
     if (xProd != null && xProd!.isNotEmpty) {
       filledFields++;
-      totalFields++;
     }
     if (cEAN != null) {
       filledFields++;
-      totalFields++;
     }
     if (NCM != null) {
       filledFields++;
-      totalFields++;
     }
     if (gpcFamilyCode != null) {
       filledFields++;
-      totalFields++;
     }
     if (gpcClassCode != null) {
       filledFields++;
-      totalFields++;
     }
     if (gpcBrickCode != null) {
       filledFields++;
-      totalFields++;
     }
     if (category != null && category!.isNotEmpty) {
       filledFields++;
-      totalFields++;
     }
     if (uCom != null && uCom!.isNotEmpty) {
       filledFields++;
-      totalFields++;
     }
 
     if ((manufacturerBrand != null && manufacturerBrand!.isNotEmpty) ||
         (CNPJFab != null)) {
       filledFields++;
-      totalFields++;
     }
     //Verifica campos adicionais e opcionais para tributação ST
     if (CEST != null) {
       filledFields++;
-      totalFields++;
     }
 
     if (precoMedioUnitario != null) {
       filledFields++;
-      totalFields++;
     }
     if (precoMedioVenda != null) {
       filledFields++;
-      totalFields++;
     }
+
+    print('filledFields === $filledFields');
+    print('totalFields === $totalFields');
 
     return (filledFields / totalFields).clamp(0.0, 1.0);
   }
@@ -251,7 +247,7 @@ class Product {
     'description': description,
     'precoMedioUnitario': precoMedioUnitario,
     'precoMedioVenda': precoMedioVenda,
-    'completionPercentage': completionPercentage,
+    'completionPercentage': getCompletionPercentage,
     'nLote': nLote,
     'dFab': dFab,
     'dVal': dVal,
@@ -260,6 +256,40 @@ class Product {
     'vOutro': vOutro,
     'vDesc': vDesc,
   };
+
+  factory Product.fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
+    final data = doc.data()!; // Use ! to assert that data is not null
+
+    return Product(
+      cProd: data['cProd'] as String, // Ensure correct casting
+      cEAN: data['cEAN'] as int?,
+      xProd: data['xProd'] as String?,
+      NCM: data['NCM'] as int?,
+      imageUrl: data['imageUrl'] as String?,
+      category: data['category'] as String?,
+      categoryName: data['categoryName'] as String?,
+      gpcSegmentCode: data['gpcSegmentCode'] as int?,
+      gpcSegmentDescription: data['gpcSegmentDescription'] as String?,
+      gpcFamilyCode: data['gpcFamilyCode'] as int?,
+      gpcFamilyDescription: data['gpcFamilyDescription'] as String?,
+      gpcClassCode: data['gpcClassCode'] as int?,
+      gpcClassDescription: data['gpcClassDescription'] as String?,
+      gpcBrickCode: data['gpcBrickCode'] as int?,
+      gpcBrickDescription: data['gpcBrickDescription'] as String?,
+      gpcBrickDefinition: data['gpcBrickDefinition'] as String?,
+      manufacturerBrand: data['manufacturerBrand'] as String?,
+      CNPJFab: data['CNPJFab'] as List<dynamic>?,
+      manufacturerImageUrl: data['manufacturerImageUrl'] as String?,
+      description: data['description'] as String?,
+      precoMedioUnitario: data['precoMedioUnitario'] as double?,
+      precoMedioVenda: data['precoMedioVenda'] as double?,
+      completionPercentage: data['completionPercentage'] as double?,
+      uCom: data['uCom'] as String?,
+      CEST: data['CEST'] as int?,
+      indTot:
+          (data['indTot'] as num?)?.toInt() ?? 1, // Ensure int and handle null
+    );
+  }
 }
 
 class DeclarationOfImport {

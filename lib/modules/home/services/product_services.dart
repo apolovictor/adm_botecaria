@@ -44,6 +44,8 @@ class ProductServices {
           'createdAt': FieldValue.serverTimestamp(),
         });
 
+        await productRef.set(product);
+
         // Upload da imagem (se houver)
         String? imageUrl;
         if (productImage != null) {
@@ -70,5 +72,12 @@ class ProductServices {
       debugPrint("Erro ao fazer upload da imagem: $e");
       rethrow;
     }
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getAdmProducts() {
+    return _firestore
+        .collection("adm_products")
+        .where('completionPercentage', isLessThan: 1)
+        .snapshots();
   }
 }

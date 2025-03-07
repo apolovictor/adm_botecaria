@@ -5,13 +5,16 @@ import 'package:asp/asp.dart';
 import '../../../setup_locator.dart';
 import '../models/category_model.dart';
 import '../models/manufacturers_model.dart';
+import '../models/products_model.dart';
 import '../repositories/category_repository.dart';
 import '../repositories/gpc_repository.dart';
 import '../repositories/manufacturers_repository.dart';
+import '../repositories/product_repository.dart';
 import '../repositories/unidades_de_medidas_repository.dart';
 import '../services/category_services.dart';
 import '../services/gpc_services.dart';
 import '../services/manufacturers_services.dart';
+import '../services/product_services.dart';
 import '../services/unidades_de_medidas_services.dart';
 import 'actions.dart';
 import 'atoms.dart';
@@ -135,5 +138,19 @@ final getGpcBrickSelector = selector((get) {
 
   bricksStream.listen((gpcBrick) {
     addGpcBrickToListAction(gpcBrick);
+  });
+});
+
+final getAdmProductsSelector = selector((get) {
+  final ProductRepository productRepository = ProductRepository(
+    getIt<ProductServices>(),
+  );
+
+  final bricksStream = productRepository.getAdmProducts().map(
+    (snapshot) => snapshot.docs.map((doc) => Product.fromDoc(doc)).toList(),
+  );
+
+  bricksStream.listen((products) {
+    addProductstoAtomListAction(products);
   });
 });

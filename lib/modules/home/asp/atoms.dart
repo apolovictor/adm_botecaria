@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:adm_botecaria/modules/home/models/gpc_model.dart';
+import 'package:adm_botecaria/modules/home/models/products_model.dart';
 import 'package:asp/asp.dart';
 import 'package:flutter/widgets.dart';
 
@@ -43,3 +44,7 @@ final gpcClassListAtom = atom<List<GpcClassModel>>([]);
 final gpcBrickListAtom = atom<List<GpcBrickModel>>([]);
 
 final productStateAtom = atom<ProductStatusState>(ProductStatusStateInitial());
+
+final productListAtom = atom<List<Product>>([]);
+
+final selectedCardAtom = atom<int>(13);
