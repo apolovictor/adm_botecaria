@@ -25,7 +25,7 @@ class ProductCard extends StatelessWidget {
             top: 0,
             bottom: 0,
             child: CircleAvatar(
-              radius: 45,
+              radius: 50,
               child: ProductCardImage(product: product),
             ),
           ),
@@ -35,19 +35,22 @@ class ProductCard extends StatelessWidget {
             left: width * 0.2,
             child: Card(
               elevation: 5,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Text(
-                      product.cProd,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black87,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        product.cProd,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black87,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

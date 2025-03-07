@@ -75,9 +75,6 @@ class ProductServices {
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getAdmProducts() {
-    return _firestore
-        .collection("adm_products")
-        .where('completionPercentage', isLessThan: 1)
-        .snapshots();
+    return _firestore.collection("adm_products").snapshots();
   }
 }

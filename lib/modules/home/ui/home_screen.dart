@@ -75,13 +75,16 @@ class HomePage extends StatelessWidget with HookMixin {
           child: Row(
             children: [
               ...generateCardGoals(),
-              SizedBox(
-                height: height * 0.15,
-                width: width * 0.35,
-                child: Card(
-                  elevation: 5,
-                  child: Center(
-                    child: CircularPercentIndicator(index: 14, percent: 1),
+              InkWell(
+                onTap: () => setSelectedCardAction(14),
+                child: SizedBox(
+                  height: height * 0.15,
+                  width: width * 0.35,
+                  child: Card(
+                    elevation: selectedCard == 14 ? 0 : 5,
+                    child: Center(
+                      child: CircularPercentIndicator(index: 14, percent: 1),
+                    ),
                   ),
                 ),
               ),
