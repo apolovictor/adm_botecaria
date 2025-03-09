@@ -1,16 +1,13 @@
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-
-import 'firebase_errors.dart';
 
 String? cProd(String? value) =>
     value == null
         ? 'Campo obrigatório'
         : value.isEmpty || value.length > 60
-        ? "Deve conter pelo menos 1 caracter e no máximo 60 "
+        ? "Deve conter pelo menos 1 caracter e no Wmáximo 60 "
         : null;
 
 String? cEan(String? value) {
@@ -121,6 +118,7 @@ String? validateQuantity(String? value) {
 }
 
 class CurrencyInputFormatter extends TextInputFormatter {
+  @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,
     TextEditingValue newValue,
@@ -138,7 +136,7 @@ class CurrencyInputFormatter extends TextInputFormatter {
 
     return newValue.copyWith(
       text: newText,
-      selection: new TextSelection.collapsed(offset: newText.length),
+      selection: TextSelection.collapsed(offset: newText.length),
     );
   }
 }

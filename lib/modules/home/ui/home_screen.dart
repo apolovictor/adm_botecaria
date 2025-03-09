@@ -24,7 +24,6 @@ class HomePage extends StatelessWidget with HookMixin {
     final List<Product> productList = useAtomState(productListAtom);
     final selectedCard = useAtomState(selectedCardAtom);
 
-    print("productList length ===== ${productList.length}");
     final result =
         productList
             .where(
@@ -34,11 +33,6 @@ class HomePage extends StatelessWidget with HookMixin {
 
     result.sort((a, b) => a.cProd.compareTo(b.cProd));
 
-    print("result length ===== ${result.length}");
-
-    print(selectedCard / requiredFields);
-
-    print(productList.map((e) => e));
     List<Widget> generateCardGoals() =>
         List.generate(
           requiredFields,

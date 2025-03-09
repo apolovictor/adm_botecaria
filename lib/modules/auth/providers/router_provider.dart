@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../home/ui/home_screen.dart';
 import '../../home/ui/product_register.dart';
 import '../asp/atoms.dart';
-import '../ui/forgot_password_screen.dart';
 import '../ui/login_screen.dart';
 import 'shell_route_layout_scaffold.dart';
 import 'states/login_states.dart';
@@ -92,12 +91,6 @@ class RouterNotifier extends ChangeNotifier {
                 },
               ),
         ),
-        GoRoute(
-          name: 'forgotPassword',
-          path: '/forgotPassword',
-          builder: (context, state) => const ForgotPasswordPage(),
-        ),
-
         GoRoute(
           path: AppRoutes.home.path,
           name: 'home',

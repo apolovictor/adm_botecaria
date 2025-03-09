@@ -1,8 +1,6 @@
 import 'package:adm_botecaria/modules/home/models/gpc_model.dart';
 import 'package:adm_botecaria/modules/home/models/unidades_de_medida_model.dart';
-import 'package:adm_botecaria/modules/home/providers/states/product_states.dart';
 import 'package:asp/asp.dart';
-
 import '../../../setup_locator.dart';
 import '../models/category_model.dart';
 import '../models/manufacturers_model.dart';
@@ -151,10 +149,7 @@ final getAdmProductsSelector = selector((get) {
     (snapshot) => snapshot.docs.map((doc) => Product.fromDoc(doc)).toList(),
   );
 
-  final response = productStream.listen((products) {
-    print("products.length ===== ${products.length}");
+  productStream.listen((products) {
     addProductstoAtomListAction(products);
   });
-
-  print("response ===== ${response}");
 });

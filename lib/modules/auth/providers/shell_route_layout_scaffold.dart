@@ -45,7 +45,7 @@ class LayoutScaffold extends StatelessWidget with HookMixin {
     }
 
     return Material(
-      color: Colors.white.withOpacity(0.2),
+      color: Colors.white.withValues(alpha: 0.2),
       child: Stack(
         children: [
           Scaffold(

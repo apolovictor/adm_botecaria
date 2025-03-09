@@ -1,7 +1,3 @@
-import 'package:email_validator/email_validator.dart';
-import 'package:intl/intl.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-
 String getAuthErrorCode(String errorCode) {
   if (errorCode.contains("email-already-in-use")) {
     return 'E-mail já cadastrado. Por favor tente com um novo e-mail ou retorne para a tela de login';

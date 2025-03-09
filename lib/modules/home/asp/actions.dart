@@ -1,9 +1,7 @@
 import 'dart:typed_data';
-
 import 'package:adm_botecaria/modules/home/models/gpc_model.dart';
 import 'package:adm_botecaria/modules/home/models/products_model.dart';
 import 'package:asp/asp.dart';
-import 'package:flutter/rendering.dart';
 import '../../../setup_locator.dart';
 import '../models/category_model.dart';
 import '../models/manufacturers_model.dart';
@@ -173,7 +171,6 @@ final addProductAction = atomAction((set) async {
     await productRepository.addProduct(product, selectedImageState.state);
     setProductStateAction(ProductStatusStateAdded());
   } catch (e) {
-    print('e ==== ${e}');
     setProductStateAction(ProductStatusStateAddingError(e.toString()));
   }
 });

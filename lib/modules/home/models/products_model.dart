@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../shared/utils/const.dart';
@@ -199,9 +201,6 @@ class Product {
     if (precoMedioVenda != null) {
       filledFields++;
     }
-
-    print('filledFields === $filledFields');
-    print('totalFields === $totalFields');
 
     return (filledFields / totalFields).clamp(0.0, 1.0);
   }
