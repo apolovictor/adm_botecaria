@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
+import '../models/products_model.dart';
 
 class ProductServices {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -76,5 +79,41 @@ class ProductServices {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getAdmProducts() {
     return _firestore.collection("adm_products").snapshots();
+  }
+
+  Future<String> updateImageOfProductOnCloudStorage(
+    Product product,
+    Uint8List productImage,
+  ) async {
+    try {
+      final storageRef = _storage.ref().child(
+        'adm_products/${product.documentId}',
+      ); //Correct usage
+      final uploadTask = await storageRef.putData(
+        productImage,
+        firebase_storage.SettableMetadata(contentType: 'image/png'),
+      ); //Correct usage
+      final imageUrl = await uploadTask.ref.getDownloadURL(); //Correct usage
+      return imageUrl;
+    } catch (e) {
+      debugPrint('Error: $e');
+      rethrow;
+    }
+  }
+
+  Future<bool> updateImageOfProductOnFirestore(
+    Product product,
+    String imageUrl,
+  ) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('adm_products')
+          .doc(product.documentId)
+          .update({'imageUrl': imageUrl});
+      return true;
+    } catch (e) {
+      debugPrint('Error: $e');
+      rethrow;
+    }
   }
 }

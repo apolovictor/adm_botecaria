@@ -52,8 +52,8 @@ final selectedCardAtom = atom<int>(13);
 
 final selectedProductAtom = atom<Product?>(null);
 
-final detailProductStatusState = atom<DetailProductStates>(
-  DetailProductStates.initial(),
+final detailProductStateAtom = atom<DetailProductStates>(
+  DetailProductStatesInitial(),
 );
 
 final selectedImageOfDetailProductState = atom<Uint8List?>(null);

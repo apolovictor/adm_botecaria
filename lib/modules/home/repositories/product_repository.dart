@@ -25,4 +25,24 @@ class ProductRepository {
   Stream<QuerySnapshot<Map<String, dynamic>>> getAdmProducts() {
     return productService.getAdmProducts();
   }
+
+  Future<String> updateImageOfProductOnCloudStorage(
+    Product product,
+    Uint8List productImage,
+  ) async {
+    return await productService.updateImageOfProductOnCloudStorage(
+      product,
+      productImage,
+    );
+  }
+
+  Future<bool> updateImageOfProductOnFirestore(
+    Product product,
+    String imageUrl,
+  ) async {
+    return await productService.updateImageOfProductOnFirestore(
+      product,
+      imageUrl,
+    );
+  }
 }

@@ -293,6 +293,67 @@ class Product {
       indTot: (data['indTot'] as num?)?.toInt() ?? 1,
     );
   }
+
+  Product copyWith({
+    String? cProd,
+    int? cEAN,
+    String? xProd,
+    int? NCM,
+    String? documentId,
+    String? imageUrl,
+    String? category,
+    String? categoryName,
+    int? gpcSegmentCode,
+    String? gpcSegmentDescription,
+    int? gpcFamilyCode,
+    String? gpcFamilyDescription,
+    int? gpcClassCode,
+    String? gpcClassDescription,
+    int? gpcBrickCode,
+    String? gpcBrickDescription,
+    String? gpcBrickDefinition,
+    String? manufacturerBrand,
+    List<dynamic>? CNPJFab,
+    String? manufacturerImageUrl,
+    String? description,
+    double? completionPercentage,
+    double? precoMedioUnitario,
+    double? precoMedioVenda,
+    String? uCom,
+    int? CEST,
+    int? indTot,
+  }) {
+    return Product(
+      cProd: cProd ?? this.cProd,
+      cEAN: cEAN ?? this.cEAN,
+      xProd: xProd ?? this.xProd,
+      NCM: NCM ?? this.NCM,
+      documentId: documentId ?? this.documentId,
+      imageUrl: imageUrl ?? this.imageUrl,
+      category: category ?? this.category,
+      categoryName: categoryName ?? this.categoryName,
+      gpcSegmentCode: gpcSegmentCode ?? this.gpcSegmentCode,
+      gpcSegmentDescription:
+          gpcSegmentDescription ?? this.gpcSegmentDescription,
+      gpcFamilyCode: gpcFamilyCode ?? this.gpcFamilyCode,
+      gpcFamilyDescription: gpcFamilyDescription ?? this.gpcFamilyDescription,
+      gpcClassCode: gpcClassCode ?? this.gpcClassCode,
+      gpcClassDescription: gpcClassDescription ?? this.gpcClassDescription,
+      gpcBrickCode: gpcBrickCode ?? this.gpcBrickCode,
+      gpcBrickDescription: gpcBrickDescription ?? this.gpcBrickDescription,
+      gpcBrickDefinition: gpcBrickDefinition ?? this.gpcBrickDefinition,
+      manufacturerBrand: manufacturerBrand ?? this.manufacturerBrand,
+      CNPJFab: CNPJFab ?? this.CNPJFab,
+      manufacturerImageUrl: manufacturerImageUrl ?? this.manufacturerImageUrl,
+      description: description ?? this.description,
+      completionPercentage: completionPercentage ?? this.completionPercentage,
+      precoMedioUnitario: precoMedioUnitario ?? this.precoMedioUnitario,
+      precoMedioVenda: precoMedioVenda ?? this.precoMedioVenda,
+      uCom: uCom ?? this.uCom,
+      CEST: CEST ?? this.CEST,
+      indTot: indTot ?? this.indTot,
+    );
+  }
 }
 
 class DeclarationOfImport {

@@ -1,3 +1,4 @@
+import 'package:adm_botecaria/modules/home/providers/states/detail_product_states.dart';
 import 'package:adm_botecaria/modules/home/providers/states/product_states.dart';
 import 'package:asp/asp.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class LayoutScaffold extends StatelessWidget with HookMixin {
   Widget build(BuildContext context) {
     final authState = useAtomState(loginStateAtom);
     final productState = useAtomState(productStateAtom);
+    final detailProductState = useAtomState(detailProductStateAtom);
 
     if (authState is LoginStateError) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -42,6 +44,22 @@ class LayoutScaffold extends StatelessWidget with HookMixin {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         context.go('/home');
         showOverlaySnackbar(context, productState.errorMessage);
+      });
+    }
+    if (detailProductState is DetailProductStatesSuccess) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        showOverlaySnackbar(context, 'Produto atualizado com sucesso!');
+        Future.delayed(const Duration(seconds: 5), () {
+          setDetailProductStateInitialAction();
+        });
+      });
+    }
+    if (detailProductState is DetailProductStatesError) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        showOverlaySnackbar(context, detailProductState.errorMessage);
+        Future.delayed(const Duration(seconds: 5), () {
+          setDetailProductStateInitialAction();
+        });
       });
     }
 

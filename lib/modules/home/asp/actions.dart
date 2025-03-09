@@ -3,9 +3,11 @@ import 'package:adm_botecaria/modules/home/models/gpc_model.dart';
 import 'package:adm_botecaria/modules/home/models/products_model.dart';
 import 'package:asp/asp.dart';
 import '../../../setup_locator.dart';
+import '../interactor/update_image_product_interactor.dart';
 import '../models/category_model.dart';
 import '../models/manufacturers_model.dart';
 import '../models/unidades_de_medida_model.dart';
+import '../providers/states/detail_product_states.dart';
 import '../providers/states/product_states.dart';
 import '../repositories/product_repository.dart';
 import '../services/product_services.dart';
@@ -183,6 +185,10 @@ final addProductstoAtomListAction = atomAction1<List<Product>>((set, products) {
   set(productListAtom, [...products]);
 });
 
+final removeItemOfProductListAction = atomAction1<Product>((set, product) {
+  set(productListAtom, [...productListAtom.state.where((e) => e != product)]);
+});
+
 final setSelectedCardAction = atomAction1<int>((set, index) {
   set(selectedCardAtom, index);
 });
@@ -197,4 +203,37 @@ final setDetailProductImage = atomAction1<Uint8List>((set, image) {
 
 final clearDetailProductImageAction = atomAction((set) {
   set(selectedImageOfDetailProductState, null);
+});
+
+final updateImageOfProductAction = atomAction2<Product, Uint8List>((
+  set,
+  product,
+  productImage,
+) async {
+  set(detailProductStateAtom, const DetailProductStates.loading());
+
+  final UpdateImageProductInteractor updateImageProductInteractor =
+      UpdateImageProductInteractor(getIt<ProductRepository>());
+
+  try {
+    final response = await updateImageProductInteractor.execute(
+      product,
+      productImage,
+    );
+
+    product = product.copyWith(imageUrl: response);
+
+    print(product);
+    setSelectedProductAction(product);
+    set(
+      detailProductStateAtom,
+      const DetailProductStates.success('Imagem adicionada com sucesso'),
+    );
+  } catch (e) {
+    set(detailProductStateAtom, DetailProductStates.error(e.toString()));
+  }
+});
+
+final setDetailProductStateInitialAction = atomAction((set) {
+  set(detailProductStateAtom, DetailProductStatesInitial());
 });

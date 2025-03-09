@@ -34,8 +34,7 @@ class DetailProductStatesSuccess extends DetailProductStates {
   }
 
   @override
-  List<Object?> get props =>
-      [successMessage]; // Ensure Equatable works correctly for errors
+  List<Object?> get props => [successMessage]; // Ensure Equatable works correctly for errors
 }
 
 class DetailProductStatesError extends DetailProductStates {
@@ -47,6 +46,5 @@ class DetailProductStatesError extends DetailProductStates {
   }
 
   @override
-  List<Object?> get props =>
-      [errorMessage]; // Ensure Equatable works correctly for errors
+  List<Object?> get props => [errorMessage];
 }
