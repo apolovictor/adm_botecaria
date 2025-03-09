@@ -283,7 +283,8 @@ class Product {
       // description: data['description'] as String?,
       // precoMedioUnitario: data['precoMedioUnitario'] as double?,
       // precoMedioVenda: data['precoMedioVenda'] as double?,
-      completionPercentage: data['completionPercentage'] as double?,
+      completionPercentage:
+          (data['completionPercentage'] as num?)?.toDouble() ?? 0.0,
       // uCom: data['uCom'] as String?,
       // CEST: data['CEST'] as int?,
       // indTot:

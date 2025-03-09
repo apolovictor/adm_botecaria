@@ -12,7 +12,7 @@ class ImageService {
     try {
       return product.imageUrl != null && product.imageUrl!.isNotEmpty
           ? Image.network(product.imageUrl!)
-          : SvgPicture.asset('default/imgs/default.svg', fit: BoxFit.scaleDown);
+          : Icon(Icons.image_not_supported, color: Colors.grey.shade700);
     } catch (e) {
       debugPrint("Error loading image: $e");
       return const Icon(Icons.error); // Placeholder for errors
