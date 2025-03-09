@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../home/ui/detail_product_screen.dart';
 import '../../home/ui/home_screen.dart';
-import '../../home/ui/product_register.dart';
+import '../../home/ui/product_register_screen.dart';
 import '../asp/atoms.dart';
 import '../ui/login_screen.dart';
 import 'shell_route_layout_scaffold.dart';
@@ -11,7 +12,8 @@ import 'states/login_states.dart';
 
 enum AppRoutes {
   home,
-  productRegister;
+  productRegister,
+  detailProduct;
 
   String get path {
     switch (this) {
@@ -19,6 +21,8 @@ enum AppRoutes {
         return '/home';
       case AppRoutes.productRegister:
         return '/productRegister';
+      case AppRoutes.detailProduct:
+        return '/detailProduct';
     }
   }
 }
@@ -103,9 +107,14 @@ class RouterNotifier extends ChangeNotifier {
         ),
 
         GoRoute(
+          path: AppRoutes.productRegister.path,
           name: 'productRegister',
-          path: '/productRegister',
-          builder: (context, state) => const ProductRegister(),
+          builder: (context, state) => const ProductRegisterPage(),
+        ),
+        GoRoute(
+          name: 'detailProduct',
+          path: AppRoutes.detailProduct.path,
+          builder: (context, state) => const DetailProductPage(),
         ),
         // GoRoute(
         //   path: AppRoutes.detailsProduct.path,
@@ -187,6 +196,8 @@ String getAuthenticatedAppRoutes(String route) {
       return AppRoutes.home.path;
     case '/productRegister':
       return AppRoutes.productRegister.path;
+    case '/detailProduct':
+      return AppRoutes.detailProduct.path;
     default:
       return AppRoutes.home.path;
   }

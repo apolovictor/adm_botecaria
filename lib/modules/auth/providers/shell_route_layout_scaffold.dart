@@ -5,6 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../shared/widgets/overlay_snackbar.dart';
+import '../../home/asp/actions.dart';
 import '../../home/asp/atoms.dart';
 import '../asp/actions.dart';
 import '../asp/atoms.dart';
@@ -56,6 +57,8 @@ class LayoutScaffold extends StatelessWidget with HookMixin {
                       title:
                           goRouterState.uri.path == '/productRegister'
                               ? const Text('Cadastrar Produto')
+                              : goRouterState.uri.path == '/detailProduct'
+                              ? const Text('Detalhes do Produto')
                               : const Text('Botecaria'),
                       centerTitle: true,
                       surfaceTintColor: Colors.transparent,
@@ -65,6 +68,17 @@ class LayoutScaffold extends StatelessWidget with HookMixin {
                           bottom: Radius.circular(30),
                         ),
                       ),
+                      leading:
+                          goRouterState.uri.path == '/detailProduct'
+                              ? IconButton(
+                                onPressed: () {
+                                  setSelectedProductAction(null);
+                                  context.go('/home');
+                                  // Navigator.pop(context);
+                                },
+                                icon: Icon(Icons.arrow_back),
+                              )
+                              : SizedBox(),
                       actions: [
                         IconButton(
                           onPressed: () {

@@ -18,6 +18,21 @@ class ImageService {
     }
   }
 
+  Future<Widget> loadManufacturerImage(
+    Product product, {
+    required BoxFit fit,
+  }) async {
+    try {
+      return product.manufacturerImageUrl != null &&
+              product.manufacturerImageUrl!.isNotEmpty
+          ? Image.network(product.manufacturerImageUrl!)
+          : Icon(Icons.image_not_supported, color: Colors.grey.shade700);
+    } catch (e) {
+      debugPrint("Error loading image: $e");
+      return const Icon(Icons.error); // Placeholder for errors
+    }
+  }
+
   // Future<Widget> loadImageToProductReport(ProductReport product,
   //     {required BoxFit fit}) async {
   //   try {

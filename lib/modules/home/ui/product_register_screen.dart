@@ -17,8 +17,8 @@ import 'widgets/text_field_widget.dart';
 
 final _formKey = GlobalKey<FormState>();
 
-class ProductRegister extends StatelessWidget with HookMixin {
-  const ProductRegister({super.key});
+class ProductRegisterPage extends StatelessWidget with HookMixin {
+  const ProductRegisterPage({super.key});
 
   @override
   Widget build(BuildContext context) {

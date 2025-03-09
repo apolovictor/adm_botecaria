@@ -28,3 +28,31 @@ Future<void> getGalleryImage(double maxWidth, double maxHeight) async {
     }
   }
 }
+
+Future<void> getGalleryImageOfDetailProudct(
+  double maxWidth,
+  double maxHeight,
+) async {
+  if (kIsWeb) {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      Uint8List fileBytes = result.files.first.bytes!;
+
+      setDetailProductImage(fileBytes);
+    }
+  } else {
+    final ImagePicker picker = ImagePicker();
+
+    final XFile? pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: maxWidth,
+      maxHeight: maxHeight,
+    );
+    if (pickedFile != null) {
+      final fileBytes = await pickedFile.readAsBytes();
+
+      setDetailProductImage(fileBytes);
+    }
+  }
+}

@@ -7,21 +7,14 @@ import '../providers/states/login_states.dart';
 import 'widgets/auth_login_screen_text_field.dart';
 import 'widgets/auth_login_sreen_password_field.dart';
 
-// 2. LoginPage (UI)
-
 final formLoginKey = GlobalKey<FormState>();
 
 class LoginPage extends StatelessWidget with HookMixin {
-  // Use HookConsumerWidget
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // final emailController = useTextEditingController();
-    // final passwordController = useTextEditingController();
     final loginState = useAtomState(loginStateAtom);
-    // final authStateProvider = ref.watch(authControllerProvider.notifier);
-
     final focusNodes = List.generate(2, (_) => FocusNode());
 
     return Center(
@@ -47,7 +40,6 @@ class LoginPage extends StatelessWidget with HookMixin {
                   textType: TextInputType.emailAddress,
                   enablefield: true,
                   validator: emailValidator,
-                  // controller: emailController,
                 ),
                 const SizedBox(height: 10),
                 passwordFieldWidget(
@@ -73,10 +65,6 @@ class LoginPage extends StatelessWidget with HookMixin {
                                 : null;
                           },
                   child:
-                      // Text(
-                      //   'Login',
-                      //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                      // ),
                       loginState is LoginStateLoading
                           ? const CircularProgressIndicator()
                           : const Text(
@@ -87,10 +75,6 @@ class LoginPage extends StatelessWidget with HookMixin {
                             ),
                           ),
                 ),
-                // TextButton(
-                //   onPressed: () => context.go('/forgotPassword'),
-                //   child: const Text('Esqueceu sua senha?'),
-                // ),
                 const SizedBox(height: 10),
               ],
             ),

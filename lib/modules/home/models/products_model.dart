@@ -10,7 +10,7 @@ class Product {
   int? cEAN; // Obrigatorio tambem para Informações do laioute  da NFC-e
   String? xProd;
   int? NCM; // Obrigatorio tambem para Informações do laioute  da NFC-e
-
+  String? documentId;
   // Informações adicionais
   String? imageUrl;
   String? category; // Category do produto
@@ -73,6 +73,7 @@ class Product {
     this.cEAN,
     this.xProd,
     this.NCM,
+    this.documentId,
     this.imageUrl,
     this.category,
     this.categoryName,
@@ -264,30 +265,32 @@ class Product {
       cEAN: data['cEAN'] as int?,
       xProd: data['xProd'] as String?,
       NCM: data['NCM'] as int?,
+      documentId: doc.id,
       imageUrl: data['imageUrl'] as String?,
-      // category: data['category'] as String?,
-      // categoryName: data['categoryName'] as String?,
-      // gpcSegmentCode: data['gpcSegmentCode'] as int?,
-      // gpcSegmentDescription: data['gpcSegmentDescription'] as String?,
-      // gpcFamilyCode: data['gpcFamilyCode'] as int?,
-      // gpcFamilyDescription: data['gpcFamilyDescription'] as String?,
-      // gpcClassCode: data['gpcClassCode'] as int?,
-      // gpcClassDescription: data['gpcClassDescription'] as String?,
-      // gpcBrickCode: data['gpcBrickCode'] as int?,
-      // gpcBrickDescription: data['gpcBrickDescription'] as String?,
-      // gpcBrickDefinition: data['gpcBrickDefinition'] as String?,
-      // manufacturerBrand: data['manufacturerBrand'] as String?,
-      // CNPJFab: data['CNPJFab'] as List<dynamic>?,
-      // manufacturerImageUrl: data['manufacturerImageUrl'] as String?,
-      // description: data['description'] as String?,
-      // precoMedioUnitario: data['precoMedioUnitario'] as double?,
-      // precoMedioVenda: data['precoMedioVenda'] as double?,
+      category: data['category'] as String?,
+      categoryName: data['categoryName'] as String?,
+      gpcSegmentCode: (data['gpcSegmentCode'] as num?)?.toInt() ?? 0,
+      gpcSegmentDescription: data['gpcSegmentDescription'] as String?,
+      gpcFamilyCode: (data['gpcFamilyCode'] as num?)?.toInt() ?? 0,
+      gpcFamilyDescription: data['gpcFamilyDescription'] as String?,
+      gpcClassCode: (data['gpcClassCode'] as num?)?.toInt() ?? 0,
+      gpcClassDescription: data['gpcClassDescription'] as String?,
+      gpcBrickCode: (data['gpcBrickCode'] as num?)?.toInt() ?? 0,
+      gpcBrickDescription: data['gpcBrickDescription'] as String?,
+      gpcBrickDefinition: data['gpcBrickDefinition'] as String?,
+      manufacturerBrand: data['manufacturerBrand'] as String?,
+      CNPJFab: data['CNPJFab'] as List<dynamic>?,
+      manufacturerImageUrl: data['manufacturerImageUrl'] as String?,
+      description: data['description'] as String?,
+      precoMedioUnitario:
+          (data['precoMedioUnitario'] as num?)?.toDouble() ?? 0.0,
+      precoMedioVenda: (data['precoMedioVenda'] as num?)?.toDouble() ?? 0.0,
       completionPercentage:
           (data['completionPercentage'] as num?)?.toDouble() ?? 0.0,
-      // uCom: data['uCom'] as String?,
-      // CEST: data['CEST'] as int?,
-      // indTot:
-      //     (data['indTot'] as num?)?.toInt() ?? 1, // Ensure int and handle null
+      uCom: data['uCom'] as String?,
+      CEST: (data['CEST'] as num?)?.toInt(),
+      // Ensure int and handle null
+      indTot: (data['indTot'] as num?)?.toInt() ?? 1,
     );
   }
 }

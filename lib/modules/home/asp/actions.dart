@@ -186,3 +186,15 @@ final addProductstoAtomListAction = atomAction1<List<Product>>((set, products) {
 final setSelectedCardAction = atomAction1<int>((set, index) {
   set(selectedCardAtom, index);
 });
+
+final setSelectedProductAction = atomAction1<Product?>((set, product) {
+  set(selectedProductAtom, product);
+});
+
+final setDetailProductImage = atomAction1<Uint8List>((set, image) {
+  set(selectedImageOfDetailProductState, image);
+});
+
+final clearDetailProductImageAction = atomAction((set) {
+  set(selectedImageOfDetailProductState, null);
+});

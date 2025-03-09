@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import '../models/category_model.dart';
 import '../models/manufacturers_model.dart';
 import '../models/unidades_de_medida_model.dart';
+import '../providers/states/detail_product_states.dart';
 import '../providers/states/product_states.dart';
 
 // Átomos para os campos do formulário de produto
@@ -48,3 +49,11 @@ final productStateAtom = atom<ProductStatusState>(ProductStatusStateInitial());
 final productListAtom = atom<List<Product>>([]);
 
 final selectedCardAtom = atom<int>(13);
+
+final selectedProductAtom = atom<Product?>(null);
+
+final detailProductStatusState = atom<DetailProductStates>(
+  DetailProductStates.initial(),
+);
+
+final selectedImageOfDetailProductState = atom<Uint8List?>(null);

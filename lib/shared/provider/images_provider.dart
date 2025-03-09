@@ -18,3 +18,18 @@ final imageWidgetProvider = FutureProvider.family<Widget, Product>((
 
   return imageWidget; // Return the widget directly
 });
+
+final imageManufacturerWidgetProvider = FutureProvider.family<Widget, Product>((
+  ref,
+  product,
+) async {
+  // Parameter should be imageUrl. Use family modifier
+
+  final imageService = ref.watch(imageServiceProvider);
+  final imageWidget = await imageService.loadManufacturerImage(
+    product,
+    fit: BoxFit.scaleDown,
+  ); // Correctly use await, and no need to pass BuildContext
+
+  return imageWidget; // Return the widget directly
+});

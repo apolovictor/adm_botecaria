@@ -53,6 +53,8 @@ dependencies:
   firebase_storage: ^12.4.4
   flutter_riverpod: ^2.6.1
   vector_math: ^2.1.4
+  barcode: ^2.2.9
+  barcode_widget: ^2.0.4
 
 dev_dependencies:
   flutter_test:
