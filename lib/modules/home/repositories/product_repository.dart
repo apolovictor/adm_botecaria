@@ -41,7 +41,7 @@ class ProductRepository {
     String imageUrl,
   ) async {
     return await productService.updateImageOfProductOnFirestore(
-      product,
+      product.toMap(),
       imageUrl,
     );
   }

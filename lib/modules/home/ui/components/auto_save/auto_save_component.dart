@@ -37,7 +37,6 @@ class _AutoSaveComponentState extends State<AutoSaveComponent>
           counter = counter! - 1;
         });
         if (counter == 0) {
-          setSelectedProductAction(null);
           updateImageOfProductAction(widget.product, widget.selectedImage);
           clearDetailProductImageAction.call();
 

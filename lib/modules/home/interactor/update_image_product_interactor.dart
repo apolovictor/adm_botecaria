@@ -14,6 +14,10 @@ class UpdateImageProductInteractor {
           .updateImageOfProductOnCloudStorage(product, productImage);
       if (imageUrlResponse.isNotEmpty) {
         try {
+          product = product.copyWith(
+            imageUrl: imageUrlResponse,
+            documentId: product.documentId,
+          );
           await _productRepository.updateImageOfProductOnFirestore(
             product,
             imageUrlResponse,

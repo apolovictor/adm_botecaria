@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter/foundation.dart';
 
 import '../models/products_model.dart';
 
@@ -102,14 +101,14 @@ class ProductServices {
   }
 
   Future<bool> updateImageOfProductOnFirestore(
-    Product product,
+    Map<String, dynamic> product,
     String imageUrl,
   ) async {
     try {
       await FirebaseFirestore.instance
           .collection('adm_products')
-          .doc(product.documentId)
-          .update({'imageUrl': imageUrl});
+          .doc(product['documentId'])
+          .update(product);
       return true;
     } catch (e) {
       debugPrint('Error: $e');

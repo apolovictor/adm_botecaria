@@ -159,7 +159,7 @@ final addProductAction = atomAction((set) async {
     category: productCategoryaAtom.state.documentId,
     categoryName: productCategoryaAtom.state.iconName,
     uCom: productUComAtom.state.trim(),
-    imageUrl: '',
+    imageUrl: null,
     manufacturerBrand: selectedManufacturersAtom.state?.name.trim(),
     CNPJFab: selectedManufacturersAtom.state?.cnpj,
     manufacturerImageUrl: selectedManufacturersAtom.state?.imageUrl,
@@ -223,7 +223,6 @@ final updateImageOfProductAction = atomAction2<Product, Uint8List>((
 
     product = product.copyWith(imageUrl: response);
 
-    print(product);
     setSelectedProductAction(product);
     set(
       detailProductStateAtom,
@@ -236,4 +235,14 @@ final updateImageOfProductAction = atomAction2<Product, Uint8List>((
 
 final setDetailProductStateInitialAction = atomAction((set) {
   set(detailProductStateAtom, DetailProductStatesInitial());
+});
+
+//UPDATE ACTIONS
+
+final updateProductAverageUnitPriceAction = atomAction1<String>((set, value) {
+  set(detailProductPrecoMedioUnitarioAtom, value);
+});
+
+final updateProductAverageSellPriceAction = atomAction1<String>((set, value) {
+  set(detailProductPrecoMedioVendaAtom, value);
 });

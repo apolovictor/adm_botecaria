@@ -1,6 +1,7 @@
 import 'package:adm_botecaria/modules/home/models/gpc_model.dart';
 import 'package:adm_botecaria/modules/home/models/unidades_de_medida_model.dart';
 import 'package:asp/asp.dart';
+import 'package:flutter/material.dart';
 import '../../../setup_locator.dart';
 import '../models/category_model.dart';
 import '../models/manufacturers_model.dart';
@@ -152,4 +153,12 @@ final getAdmProductsSelector = selector((get) {
   productStream.listen((products) {
     addProductstoAtomListAction(products);
   });
+});
+
+final scrollControllerCardGoalsSelector = selector<ScrollController>((get) {
+  final selectedCard = get(selectedCardAtom);
+
+  print('selectedCard === $selectedCard');
+
+  return ScrollController();
 });

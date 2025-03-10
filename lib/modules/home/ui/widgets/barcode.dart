@@ -14,14 +14,14 @@ buildBarcode(
       ? BarcodeWidget(
         barcode: Barcode.ean8(drawSpacers: true),
         data: data,
-        width: width * 0.5,
-        height: 160,
+        width: width * 0.4,
+        height: height,
       )
       : BarcodeWidget(
         barcode: Barcode.ean13(drawEndChar: true),
         data: data,
-        width: width * 0.5,
-        height: 80,
+        width: width * 0.4,
+        height: height,
       );
   // /// Create the Barcode
   // final svg = bc.toSvg(

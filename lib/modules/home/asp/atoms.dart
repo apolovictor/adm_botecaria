@@ -56,4 +56,22 @@ final detailProductStateAtom = atom<DetailProductStates>(
   DetailProductStatesInitial(),
 );
 
+//Detail Products
 final selectedImageOfDetailProductState = atom<Uint8List?>(null);
+
+final detailProductCodeAtom = atom<String>('');
+final detailProductEanAtom = atom<int?>(null);
+final detailProductNameAtom = atom<String>('');
+final detailProductNCMAtom = atom<int?>(null);
+
+final detailProductCategoryaAtom = atom<Categories>(Categories.empty());
+final detailProductUComAtom = atom<String>('');
+final detailProductManufacturerBrandAtom = atom<String>('');
+final detailProductCNPJFabAtom = atom<String>('');
+final detailProductCESTAtom = atom<int?>(null);
+final detailProductPrecoMedioUnitarioAtom = atom<String>('0');
+final detailProductPrecoMedioVendaAtom = atom<String>('0');
+final detailProductDescriptionAtom = atom<String>('');
+final detailProductgpcFamilySelectedAtom = atom<GpcFamilyModel?>(null);
+final detailProductgpcClassSelectedAtom = atom<GpcClassModel?>(null);
+final detailProductgpcBrickSelectedAtom = atom<GpcBrickModel?>(null);

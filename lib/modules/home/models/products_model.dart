@@ -160,48 +160,64 @@ class Product {
     int totalFields = requiredFields; //Total de campos essenciais
     int filledFields = 1; //Total de campos preenchidos
     if (imageUrl != null) {
+      print('imageUrl');
       filledFields++;
     }
     if (xProd != null && xProd!.isNotEmpty) {
       filledFields++;
+      print('xProd');
     }
     if (cEAN != null) {
       filledFields++;
+      print('cEan');
     }
     if (NCM != null) {
       filledFields++;
+      print('NCM');
     }
     if (gpcFamilyCode != null) {
       filledFields++;
+      print('gpcFamily');
     }
     if (gpcClassCode != null) {
       filledFields++;
+      print('gpcClass');
     }
     if (gpcBrickCode != null) {
       filledFields++;
+      print('gpcBrick');
     }
     if (category != null && category!.isNotEmpty) {
       filledFields++;
+      print('ca4tegory');
     }
     if (uCom != null && uCom!.isNotEmpty) {
       filledFields++;
+      print('uCom');
     }
 
     if ((manufacturerBrand != null && manufacturerBrand!.isNotEmpty) ||
         (CNPJFab != null)) {
       filledFields++;
+      print('manufacturer');
     }
     //Verifica campos adicionais e opcionais para tributação ST
     if (CEST != null) {
       filledFields++;
+      print('CEST');
     }
 
     if (precoMedioUnitario != null) {
       filledFields++;
+      print('unitario');
     }
     if (precoMedioVenda != null) {
       filledFields++;
+      print('venda');
     }
+
+    print('filledFields ==== $filledFields');
+    print('media ==== ${filledFields / totalFields}');
 
     return (filledFields / totalFields).clamp(0.0, 1.0);
   }
@@ -212,6 +228,7 @@ class Product {
   }
 
   Map<String, dynamic> toMap() => {
+    'documentId': documentId,
     'cProd': cProd,
     'cEAN': cEAN,
     'xProd': xProd,
@@ -335,11 +352,11 @@ class Product {
       gpcSegmentCode: gpcSegmentCode ?? this.gpcSegmentCode,
       gpcSegmentDescription:
           gpcSegmentDescription ?? this.gpcSegmentDescription,
-      gpcFamilyCode: gpcFamilyCode ?? this.gpcFamilyCode,
+      gpcFamilyCode: gpcFamilyCode,
       gpcFamilyDescription: gpcFamilyDescription ?? this.gpcFamilyDescription,
-      gpcClassCode: gpcClassCode ?? this.gpcClassCode,
+      gpcClassCode: gpcClassCode,
       gpcClassDescription: gpcClassDescription ?? this.gpcClassDescription,
-      gpcBrickCode: gpcBrickCode ?? this.gpcBrickCode,
+      gpcBrickCode: gpcBrickCode,
       gpcBrickDescription: gpcBrickDescription ?? this.gpcBrickDescription,
       gpcBrickDefinition: gpcBrickDefinition ?? this.gpcBrickDefinition,
       manufacturerBrand: manufacturerBrand ?? this.manufacturerBrand,
@@ -347,8 +364,8 @@ class Product {
       manufacturerImageUrl: manufacturerImageUrl ?? this.manufacturerImageUrl,
       description: description ?? this.description,
       completionPercentage: completionPercentage ?? this.completionPercentage,
-      precoMedioUnitario: precoMedioUnitario ?? this.precoMedioUnitario,
-      precoMedioVenda: precoMedioVenda ?? this.precoMedioVenda,
+      precoMedioUnitario: precoMedioUnitario,
+      precoMedioVenda: precoMedioVenda,
       uCom: uCom ?? this.uCom,
       CEST: CEST ?? this.CEST,
       indTot: indTot ?? this.indTot,
