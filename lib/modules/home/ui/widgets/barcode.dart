@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:barcode/barcode.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 
 buildBarcode(
@@ -23,17 +20,4 @@ buildBarcode(
         width: width * 0.4,
         height: height,
       );
-  // /// Create the Barcode
-  // final svg = bc.toSvg(
-  //   data,
-  //   width: width ?? 200,
-  //   height: height ?? 80,
-  //   fontHeight: fontHeight,
-  // );
-
-  // // Save the image
-  // filename ??= bc.name.replaceAll(RegExp(r'\s'), '-').toLowerCase();
-  // return File('$filename.svg').writeAsStringSync(svg);
-
-  // return result;
 }

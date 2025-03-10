@@ -70,6 +70,7 @@ class CircularPercentIndicatorState extends State<CircularPercentIndicator>
         fillColor: widget.fillColor,
         backgroundColor: widget.backgroundColor,
         progressColor: widget.progressColor,
+        animation: _animation,
       ),
       child: Padding(
         padding: EdgeInsets.all(widget.lineWidth / 2),
@@ -81,7 +82,7 @@ class CircularPercentIndicatorState extends State<CircularPercentIndicator>
               animation: _animation,
               builder: (context, child) {
                 return Text(
-                  '${(widget.index * _animation.value).toStringAsFixed(0)}/${(requiredFields * _animation.value).toStringAsFixed(0)}',
+                  '${(widget.index * _animation.value).toStringAsFixed(0)}/${(requiredFields).toStringAsFixed(0)}',
                   style: widget.percentTextStyle,
                 );
               },

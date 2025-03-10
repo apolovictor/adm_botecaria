@@ -7,6 +7,7 @@ class CircularPercentPainter extends CustomPainter {
   final Color fillColor;
   final Color backgroundColor;
   final Color progressColor;
+  final Animation<double> animation;
 
   CircularPercentPainter({
     required this.percent,
@@ -14,6 +15,7 @@ class CircularPercentPainter extends CustomPainter {
     required this.fillColor,
     required this.backgroundColor,
     required this.progressColor,
+    required this.animation,
   });
 
   @override
@@ -44,7 +46,9 @@ class CircularPercentPainter extends CustomPainter {
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
       radians(-90), // Start at -90 degrees (top)
-      radians(360.0 * percent), // Sweep angle based on percent
+      radians(
+        (360.0 * percent) * animation.value,
+      ), // Sweep angle based on percent
       false, // Don't use center
       Paint()
         ..color = progressColor
