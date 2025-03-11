@@ -45,4 +45,13 @@ class ProductRepository {
       imageUrl,
     );
   }
+
+  Future<dynamic> updateProduct(Product product) async {
+    try {
+      final response = await productService.updateProduct(product.toMap());
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

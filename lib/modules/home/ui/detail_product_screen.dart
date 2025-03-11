@@ -6,6 +6,7 @@ import 'package:adm_botecaria/modules/home/ui/widgets/detail_manufacturer_card_i
 import 'package:asp/asp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import '../../../shared/helpers/validators.dart';
 import '../asp/actions.dart';
 import '../asp/atoms.dart';
@@ -14,7 +15,6 @@ import '../providers/states/detail_product_states.dart';
 import 'components/auto_save/auto_save_component.dart';
 import 'components/buttons/update_button.dart';
 import 'widgets/detail_product_card_image.dart';
-import 'widgets/register/gpc_family_field.dart';
 import 'widgets/text_field_widget.dart';
 import 'widgets/update/brand_update_field.dart';
 import 'widgets/update/categories_update_field.dart';
@@ -64,6 +64,7 @@ class DetailProductPage extends StatelessWidget with HookMixin {
     final detailProductPrecoMedioVenda = useAtomState(
       detailProductPrecoMedioVendaAtom,
     );
+    final detailProductDescription = useAtomState(detailProductDescriptionAtom);
 
     return selectedProduct != null
         ? LayoutBuilder(
@@ -249,346 +250,423 @@ class DetailProductPage extends StatelessWidget with HookMixin {
                               selectedProduct.cProd,
                               textAlign: TextAlign.center,
                             ),
-
-                            selectedProduct.xProd != null
-                                ? Text(
-                                  'Nome na NFC-e: ${selectedProduct.xProd}',
-                                  textAlign: TextAlign.center,
-                                )
-                                : getTextField(
-                                  labelText: 'Nome do Produto que irá na NFC-e',
-                                  keyboardType: TextInputType.text,
-                                  onChanged:
-                                      (value) =>
-                                          value.isEmpty
-                                              ? updateXProdAction(null)
-                                              : updateXProdAction(value),
-                                ),
-                            SizedBox(height: 10),
-                            selectedProduct.cEAN != null
-                                ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    buildBarcode(
-                                      selectedProduct.cEAN.toString(),
-                                      width: width,
-                                      height: 60,
-                                    ),
-                                  ],
-                                )
-                                : getTextField(
-                                  labelText: 'GTIN (Código de Barras)',
-                                  keyboardType: TextInputType.number,
-
-                                  // focusNodeCurrent: focusNodes[2],
-                                  validator: cEan,
-                                  // onFieldSubmitted:
-                                  //     (_) => FocusScope.of(context).requestFocus(focusNodes[3]),
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ],
-                                  onChanged:
-                                      (value) =>
-                                          updateEanAction(int.tryParse(value)),
-                                ),
-                            SizedBox(height: 10),
-
-                            NCMString != null
-                                ? Row(
-                                  children: [
-                                    Text(
-                                      'NCM: ${NCMString.substring(0, 4)}.${NCMString.substring(4, 6)}.${NCMString.substring(6, 8)}',
-                                    ),
-                                  ],
-                                )
-                                : getTextField(
-                                  labelText: 'NCM (8 dígitos)',
-                                  keyboardType: TextInputType.number,
-                                  validator: validateNCM,
-
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ],
-
-                                  // focusNodeCurrent: focusNodes[3],
-                                  // onFieldSubmitted:
-                                  //     (_) => FocusScope.of(context).requestFocus(focusNodes[4]),
-                                  onChanged:
-                                      (value) =>
-                                          updateNCMAction(int.tryParse(value)),
-                                ),
-                            SizedBox(height: 10),
-
-                            CESTString != null
-                                ? Row(
-                                  children: [
-                                    Text(
-                                      'CEST: ${CESTString.substring(0, 2)}.${CESTString.substring(2, 5)}.${CESTString.substring(5, 7)}',
-                                    ),
-                                  ],
-                                )
-                                : getTextField(
-                                  labelText: 'CEST',
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ],
-                                  validator: cest,
-
-                                  // focusNodeCurrent: focusNodes[6],
-                                  // onFieldSubmitted:
-                                  //     (_) => FocusScope.of(context).requestFocus(focusNodes[7]),
-                                  onChanged:
-                                      (value) =>
-                                          updateCESTAction(int.tryParse(value)),
-                                ),
-                            SizedBox(height: 10),
-
-                            Container(
-                              padding: EdgeInsets.all(10),
-                              color:
-                                  Theme.of(
-                                    context,
-                                  ).colorScheme.secondaryContainer,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'GPC',
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 5),
-
-                                  Text('Segmento: Comidas e Bebidas'),
-                                  SizedBox(height: 10),
-                                  selectedProduct.gpcFamilyDescription != null
-                                      ? Text(
-                                        'Família: ${selectedProduct.gpcFamilyDescription}',
-                                      )
-                                      : GpcFamilyUpdateField(
-                                        focusNode: FocusNode(),
-                                        // focusNodes[4],
-                                      ),
-                                  SizedBox(height: 10),
-
-                                  selectedProduct.gpcClassDescription != null
-                                      ? Text(
-                                        'Class: ${selectedProduct.gpcClassDescription}',
-                                      )
-                                      : detailProductgpcFamilySelected != null
-                                      ? GpcClassUpdateField()
-                                      : SizedBox(),
-                                  SizedBox(height: 10),
-
-                                  selectedProduct.gpcBrickDescription != null
-                                      ? Text(
-                                        'Bloco: ${selectedProduct.gpcBrickDescription}',
-                                      )
-                                      : detailProductgpcClassSelected != null
-                                      ? GpcBricksUpdateField()
-                                      : SizedBox(),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 10),
-
-                            selectedProduct.categoryName != null
-                                ? Row(
-                                  children: [
-                                    Text(
-                                      'Categoria: ${selectedProduct.categoryName}',
-                                    ),
-                                  ],
-                                )
-                                : CategoriesUpdateField(),
-
-                            SizedBox(height: 10),
-                            selectedProduct.uCom != null
-                                ? Row(
-                                  children: [
-                                    Text(
-                                      'Unidade Comercial: ${selectedProduct.uCom}',
-                                    ),
-                                  ],
-                                )
-                                : UnidadedMedidaUpdateField(),
-                            SizedBox(height: 10),
-
-                            selectedProduct.manufacturerBrand != null
+                            detailProductState is! DetailProductStatesLoading
                                 ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Fabricante: ${selectedProduct.manufacturerBrand}',
+                                    selectedProduct.xProd != null
+                                        ? Text(
+                                          'Nome na NFC-e: ${selectedProduct.xProd}',
+                                          textAlign: TextAlign.center,
+                                        )
+                                        : getTextField(
+                                          labelText:
+                                              'Nome do Produto que irá na NFC-e',
+                                          keyboardType: TextInputType.text,
+                                          onChanged:
+                                              (value) =>
+                                                  value.isEmpty
+                                                      ? updateXProdAction(null)
+                                                      : updateXProdAction(
+                                                        value,
+                                                      ),
                                         ),
-                                      ],
-                                    ),
-                                    Align(
-                                      alignment: Alignment.topRight,
-                                      child: SizedBox(
-                                        height: 120,
-                                        width: width,
-                                        child: DetailManufacturerCardImage(
-                                          product: selectedProduct,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                                : BrandUpdateField(),
-                            SizedBox(height: 10),
+                                    SizedBox(height: 10),
+                                    selectedProduct.cEAN != null
+                                        ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            buildBarcode(
+                                              selectedProduct.cEAN.toString(),
+                                              width: width,
+                                              height: 60,
+                                            ),
+                                          ],
+                                        )
+                                        : getTextField(
+                                          labelText: 'GTIN (Código de Barras)',
+                                          keyboardType: TextInputType.number,
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                selectedProduct.precoMedioUnitario != null &&
-                                        selectedProduct.precoMedioUnitario! > 0
-                                    ? ChipWidget(
-                                      labelColor:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.onSecondaryContainer,
-                                      backgorundColor:
+                                          // focusNodeCurrent: focusNodes[2],
+                                          validator: cEan,
+                                          // onFieldSubmitted:
+                                          //     (_) => FocusScope.of(context).requestFocus(focusNodes[3]),
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                          ],
+                                          onChanged:
+                                              (value) => updateEanAction(
+                                                int.tryParse(value),
+                                              ),
+                                        ),
+                                    SizedBox(height: 10),
+
+                                    NCMString != null
+                                        ? Row(
+                                          children: [
+                                            Text(
+                                              'NCM: ${NCMString.substring(0, 4)}.${NCMString.substring(4, 6)}.${NCMString.substring(6, 8)}',
+                                            ),
+                                          ],
+                                        )
+                                        : getTextField(
+                                          labelText: 'NCM (8 dígitos)',
+                                          keyboardType: TextInputType.number,
+                                          validator: validateNCM,
+
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                          ],
+
+                                          // focusNodeCurrent: focusNodes[3],
+                                          // onFieldSubmitted:
+                                          //     (_) => FocusScope.of(context).requestFocus(focusNodes[4]),
+                                          onChanged:
+                                              (value) => updateNCMAction(
+                                                int.tryParse(value),
+                                              ),
+                                        ),
+                                    SizedBox(height: 10),
+
+                                    CESTString != null
+                                        ? Row(
+                                          children: [
+                                            Text(
+                                              'CEST: ${CESTString.substring(0, 2)}.${CESTString.substring(2, 5)}.${CESTString.substring(5, 7)}',
+                                            ),
+                                          ],
+                                        )
+                                        : getTextField(
+                                          labelText: 'CEST',
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                          ],
+                                          validator: cest,
+
+                                          // focusNodeCurrent: focusNodes[6],
+                                          // onFieldSubmitted:
+                                          //     (_) => FocusScope.of(context).requestFocus(focusNodes[7]),
+                                          onChanged:
+                                              (value) => updateCESTAction(
+                                                int.tryParse(value),
+                                              ),
+                                        ),
+                                    SizedBox(height: 10),
+
+                                    Container(
+                                      padding: EdgeInsets.all(10),
+                                      color:
                                           Theme.of(
                                             context,
                                           ).colorScheme.secondaryContainer,
-                                      value:
-                                          selectedProduct.precoMedioUnitario!,
-                                      iconData: Icons.input,
-                                    )
-                                    : SizedBox(
-                                      width: width * 0.4,
-                                      child: getTextField(
-                                        labelText:
-                                            'Preço médio unitário (Interno)',
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: <TextInputFormatter>[
-                                          FilteringTextInputFormatter
-                                              .digitsOnly,
-                                          CurrencyInputFormatter(),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'GPC',
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 5),
+
+                                          Text('Segmento: Comidas e Bebidas'),
+                                          SizedBox(height: 10),
+                                          selectedProduct
+                                                      .gpcFamilyDescription !=
+                                                  null
+                                              ? Text(
+                                                'Família: ${selectedProduct.gpcFamilyDescription}',
+                                              )
+                                              : GpcFamilyUpdateField(
+                                                focusNode: FocusNode(),
+                                                // focusNodes[4],
+                                              ),
+                                          SizedBox(height: 10),
+
+                                          selectedProduct.gpcClassDescription !=
+                                                  null
+                                              ? Text(
+                                                'Class: ${selectedProduct.gpcClassDescription}',
+                                              )
+                                              : detailProductgpcFamilySelected !=
+                                                  null
+                                              ? GpcClassUpdateField()
+                                              : SizedBox(),
+                                          SizedBox(height: 10),
+
+                                          selectedProduct.gpcBrickDescription !=
+                                                  null
+                                              ? Text(
+                                                'Bloco: ${selectedProduct.gpcBrickDescription}',
+                                              )
+                                              : detailProductgpcClassSelected !=
+                                                  null
+                                              ? GpcBricksUpdateField()
+                                              : SizedBox(),
                                         ],
-                                        // focusNodeCurrent: focusNodes[7],
-                                        // onFieldSubmitted:
-                                        //     (_) => FocusScope.of(context).requestFocus(focusNodes[8]),
-                                        onChanged: (value) {
-                                          if (double.tryParse(
-                                                value
-                                                    .replaceAll('R\$', '')
-                                                    .replaceAll(',', ''),
-                                              ) ==
-                                              0) {
-                                            updateProductAverageUnitPriceAction(
-                                              null,
-                                            );
-                                          } else {
-                                            String cleanedValue = value
-                                                .replaceAll('R\$', '')
-                                                .replaceAll('.', '');
-                                            updateProductAverageUnitPriceAction(
-                                              cleanedValue,
-                                            );
-                                          }
-                                        },
                                       ),
                                     ),
+                                    SizedBox(height: 10),
 
-                                selectedProduct.precoMedioVenda != null &&
-                                        selectedProduct.precoMedioVenda! > 0
-                                    ? ChipWidget(
-                                      labelColor:
-                                          Theme.of(
-                                            context,
-                                          ).colorScheme.onSecondaryContainer,
-                                      backgorundColor: Color(0xFFcdeda3),
-                                      value: selectedProduct.precoMedioVenda!,
-                                      iconData: Icons.arrow_outward,
-                                    )
-                                    : SizedBox(
-                                      width: width * 0.4,
-                                      child: getTextField(
-                                        labelText:
-                                            'Preço médio venda (Interno)',
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: <TextInputFormatter>[
-                                          FilteringTextInputFormatter
-                                              .digitsOnly,
-                                          CurrencyInputFormatter(),
-                                        ],
-                                        // focusNodeCurrent: focusNodes[7],
-                                        // onFieldSubmitted:
-                                        //     (_) => FocusScope.of(context).requestFocus(focusNodes[8]),
-                                        onChanged: (value) {
-                                          if (double.tryParse(
-                                                value
-                                                    .replaceAll('R\$', '')
-                                                    .replaceAll(',', ''),
-                                              ) ==
-                                              0) {
-                                            updateProductAverageSellPriceAction(
-                                              null,
-                                            );
-                                          } else {
-                                            String cleanedValue = value
-                                                .replaceAll('R\$', '')
-                                                .replaceAll('.', '');
-                                            updateProductAverageSellPriceAction(
-                                              cleanedValue,
-                                            );
-                                          }
-                                        },
-                                      ),
+                                    selectedProduct.categoryName != null
+                                        ? Row(
+                                          children: [
+                                            Text(
+                                              'Categoria: ${selectedProduct.categoryName}',
+                                            ),
+                                          ],
+                                        )
+                                        : CategoriesUpdateField(),
+
+                                    SizedBox(height: 10),
+                                    selectedProduct.uCom != null
+                                        ? Row(
+                                          children: [
+                                            Text(
+                                              'Unidade Comercial: ${selectedProduct.uCom}',
+                                            ),
+                                          ],
+                                        )
+                                        : UnidadedMedidaUpdateField(),
+                                    SizedBox(height: 10),
+
+                                    selectedProduct.manufacturerBrand != null
+                                        ? Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Fabricante: ${selectedProduct.manufacturerBrand}',
+                                                ),
+                                              ],
+                                            ),
+                                            Align(
+                                              alignment: Alignment.topRight,
+                                              child: SizedBox(
+                                                height: 120,
+                                                width: width,
+                                                child:
+                                                    DetailManufacturerCardImage(
+                                                      product: selectedProduct,
+                                                    ),
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                        : BrandUpdateField(),
+                                    SizedBox(height: 10),
+
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        selectedProduct.precoMedioUnitario !=
+                                                    null &&
+                                                selectedProduct
+                                                        .precoMedioUnitario! >
+                                                    0
+                                            ? ChipWidget(
+                                              labelColor:
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .onSecondaryContainer,
+                                              backgorundColor:
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .secondaryContainer,
+                                              value:
+                                                  selectedProduct
+                                                      .precoMedioUnitario!,
+                                              iconData: Icons.input,
+                                            )
+                                            : SizedBox(
+                                              width: width * 0.4,
+                                              child: getTextField(
+                                                labelText:
+                                                    'Preço médio unitário (Interno)',
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                inputFormatters: <
+                                                  TextInputFormatter
+                                                >[
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly,
+                                                  CurrencyInputFormatter(),
+                                                ],
+                                                // focusNodeCurrent: focusNodes[7],
+                                                // onFieldSubmitted:
+                                                //     (_) => FocusScope.of(context).requestFocus(focusNodes[8]),
+                                                onChanged: (value) {
+                                                  if (double.tryParse(
+                                                        value
+                                                            .replaceAll(
+                                                              'R\$',
+                                                              '',
+                                                            )
+                                                            .replaceAll(
+                                                              ',',
+                                                              '',
+                                                            ),
+                                                      ) ==
+                                                      0) {
+                                                    updateProductAverageUnitPriceAction(
+                                                      null,
+                                                    );
+                                                  } else {
+                                                    String cleanedValue = value
+                                                        .replaceAll('R\$', '')
+                                                        .replaceAll('.', '');
+                                                    updateProductAverageUnitPriceAction(
+                                                      cleanedValue,
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+
+                                        selectedProduct.precoMedioVenda !=
+                                                    null &&
+                                                selectedProduct
+                                                        .precoMedioVenda! >
+                                                    0
+                                            ? ChipWidget(
+                                              labelColor:
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .onSecondaryContainer,
+                                              backgorundColor: Color(
+                                                0xFFcdeda3,
+                                              ),
+                                              value:
+                                                  selectedProduct
+                                                      .precoMedioVenda!,
+                                              iconData: Icons.arrow_outward,
+                                            )
+                                            : SizedBox(
+                                              width: width * 0.4,
+                                              child: getTextField(
+                                                labelText:
+                                                    'Preço médio venda (Interno)',
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                inputFormatters: <
+                                                  TextInputFormatter
+                                                >[
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly,
+                                                  CurrencyInputFormatter(),
+                                                ],
+                                                // focusNodeCurrent: focusNodes[7],
+                                                // onFieldSubmitted:
+                                                //     (_) => FocusScope.of(context).requestFocus(focusNodes[8]),
+                                                onChanged: (value) {
+                                                  if (double.tryParse(
+                                                        value
+                                                            .replaceAll(
+                                                              'R\$',
+                                                              '',
+                                                            )
+                                                            .replaceAll(
+                                                              ',',
+                                                              '',
+                                                            ),
+                                                      ) ==
+                                                      0) {
+                                                    updateProductAverageSellPriceAction(
+                                                      null,
+                                                    );
+                                                  } else {
+                                                    String cleanedValue = value
+                                                        .replaceAll('R\$', '')
+                                                        .replaceAll('.', '');
+                                                    updateProductAverageSellPriceAction(
+                                                      cleanedValue,
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                      ],
                                     ),
-                              ],
-                            ),
-                            SizedBox(height: 10),
+                                    SizedBox(height: 10),
 
-                            getTextField(
-                              labelText: 'Descrição',
-                              keyboardType: TextInputType.multiline,
-                              maxLines: 3,
-                              // focusNodeCurrent: focusNodes[9],
-                              onChanged:
-                                  (value) =>
-                                      updateProductDesciptionAction(value),
-                            ),
+                                    selectedProduct.description != null
+                                        ? Text(
+                                          'Descrição: ${selectedProduct.description}',
+                                        )
+                                        : getTextField(
+                                          labelText: 'Descrição',
+                                          keyboardType: TextInputType.multiline,
+                                          maxLines: 3,
+                                          // focusNodeCurrent: focusNodes[9],
+                                          onChanged:
+                                              (value) =>
+                                                  value.isEmpty
+                                                      ? updateProductDesciptionAction(
+                                                        null,
+                                                      )
+                                                      : updateProductDesciptionAction(
+                                                        value,
+                                                      ),
+                                        ),
+                                  ],
+                                )
+                                : CircularProgressIndicator(),
                           ],
                         ),
                       ),
                     ),
                   ),
-                  selectedProduct.xProd != detailProductXProd ||
-                          selectedProduct.cEAN != detailProductEan ||
-                          selectedProduct.NCM != detailProductNCM ||
-                          selectedProduct.CEST != detailProductCEST ||
-                          selectedProduct.gpcFamilyCode !=
-                              detailProductgpcFamilySelected?.familyCode ||
-                          selectedProduct.category !=
-                              detailProductCategory.documentId ||
-                          selectedProduct.uCom != detailProductUCom ||
-                          selectedProduct.manufacturerBrand !=
-                              selectedManufacturer?.name ||
-                          selectedProduct.precoMedioUnitario !=
-                              double.tryParse(
-                                (detailProductPrecoMedioUnitario ?? '')
-                                    .replaceAll(',', '.'),
-                              ) ||
-                          selectedProduct.precoMedioVenda !=
-                              double.tryParse(
-                                (detailProductPrecoMedioVenda ?? '').replaceAll(
-                                  ',',
-                                  '.',
-                                ),
-                              )
+                  selectedProduct.xProd == null &&
+                              selectedProduct.xProd != detailProductXProd ||
+                          selectedProduct.cEAN == null &&
+                              selectedProduct.cEAN != detailProductEan ||
+                          selectedProduct.NCM == null &&
+                              selectedProduct.NCM != detailProductNCM ||
+                          selectedProduct.CEST == null &&
+                              selectedProduct.CEST != detailProductCEST ||
+                          selectedProduct.gpcFamilyCode == null &&
+                              selectedProduct.gpcFamilyCode !=
+                                  detailProductgpcFamilySelected?.familyCode ||
+                          selectedProduct.category == null &&
+                              selectedProduct.category !=
+                                  detailProductCategory.documentId ||
+                          selectedProduct.uCom == null &&
+                              selectedProduct.uCom != detailProductUCom ||
+                          selectedProduct.manufacturerBrand == null &&
+                              selectedProduct.manufacturerBrand !=
+                                  selectedManufacturer?.name ||
+                          selectedProduct.precoMedioUnitario == null &&
+                              selectedProduct.precoMedioUnitario !=
+                                  double.tryParse(
+                                    (detailProductPrecoMedioUnitario ?? '')
+                                        .replaceAll(',', '.'),
+                                  ) ||
+                          selectedProduct.precoMedioVenda == null &&
+                              selectedProduct.precoMedioVenda !=
+                                  double.tryParse(
+                                    (detailProductPrecoMedioVenda ?? '')
+                                        .replaceAll(',', '.'),
+                                  ) ||
+                          selectedProduct.description == null &&
+                              selectedProduct.description !=
+                                  detailProductDescription
                       ? Positioned(
                         bottom: 0,
                         left: 0,
@@ -598,8 +676,10 @@ class DetailProductPage extends StatelessWidget with HookMixin {
                             'Atualizar',
                             style: TextStyle(color: Colors.white),
                           ),
-                          onpressed: () {
+                          onpressed: () async {
                             if (_updateFormKey.currentState!.validate()) {
+                              await updateProductAction(selectedProduct);
+                              context.go('/home');
                             } else {
                               return;
                             }

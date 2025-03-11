@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/foundation.dart';
 
@@ -112,6 +113,25 @@ class ProductServices {
       return true;
     } catch (e) {
       debugPrint('Error: $e');
+      rethrow;
+    }
+  }
+
+  Future<bool> updateProduct(Map<String, dynamic> product) async {
+    try {
+      final productRef = _firestore
+          .collection('adm_products')
+          .doc(product['documentId']);
+
+      product.addAll({
+        'lastUpdate': FirebaseAuth.instance.currentUser?.uid,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      await productRef.update(product);
+
+      return true;
+    } catch (e) {
       rethrow;
     }
   }

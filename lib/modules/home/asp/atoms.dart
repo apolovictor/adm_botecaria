@@ -20,12 +20,12 @@ final productNCMAtom = atom<int?>(null);
 
 final productCategoryAtom = atom<Categories>(Categories.empty());
 final productUComAtom = atom<String?>(null);
-final productManufacturerBrandAtom = atom<String>('');
-final productCNPJFabAtom = atom<String>('');
+final productManufacturerBrandAtom = atom<String?>(null);
+final productCNPJFabAtom = atom<String?>(null);
 final productCESTAtom = atom<int?>(null);
-final productPrecoMedioUnitarioAtom = atom<String>('');
-final productPrecoMedioVendaAtom = atom<String>('');
-final productDescriptionAtom = atom<String>('');
+final productPrecoMedioUnitarioAtom = atom<String?>(null);
+final productPrecoMedioVendaAtom = atom<String?>(null);
+final productDescriptionAtom = atom<String?>(null);
 final gpcFamilySelectedAtom = atom<GpcFamilyModel?>(null);
 final gpcClassSelectedAtom = atom<GpcClassModel?>(null);
 final gpcBrickSelectedAtom = atom<GpcBrickModel?>(null);
@@ -39,9 +39,7 @@ final filterManufacturersAtom = atom<dynamic>(null);
 final selectedManufacturersAtom = atom<Manufacturer?>(null);
 
 final gpcFamilyListAtom = atom<List<GpcFamilyModel>>([]);
-
 final gpcClassListAtom = atom<List<GpcClassModel>>([]);
-
 final gpcBrickListAtom = atom<List<GpcBrickModel>>([]);
 
 final productStateAtom = atom<ProductStatusState>(ProductStatusStateInitial());
@@ -74,7 +72,7 @@ final filterManufacturersUpdateAtom = atom<dynamic>(null);
 // final detailProductCNPJFabAtom = atom<String>('');
 final detailProductPrecoMedioUnitarioAtom = atom<String?>(null);
 final detailProductPrecoMedioVendaAtom = atom<String?>(null);
-final detailProductDescriptionAtom = atom<String>('');
+final detailProductDescriptionAtom = atom<String?>(null);
 final detailProductgpcFamilySelectedAtom = atom<GpcFamilyModel?>(null);
 final detailProductgpcClassSelectedAtom = atom<GpcClassModel?>(null);
 final detailProductgpcBrickSelectedAtom = atom<GpcBrickModel?>(null);

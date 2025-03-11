@@ -138,10 +138,14 @@ final addProductAction = atomAction((set) async {
   );
 
   double? productPrecoMedioUnitario = double.tryParse(
-    productPrecoMedioUnitarioAtom.state.replaceAll(',', '.'),
+    productPrecoMedioUnitarioAtom.state != null
+        ? productPrecoMedioUnitarioAtom.state!.replaceAll(',', '.')
+        : '',
   );
   double? productPrecoMedioVenda = double.tryParse(
-    productPrecoMedioVendaAtom.state.replaceAll(',', '.'),
+    productPrecoMedioVendaAtom.state != null
+        ? productPrecoMedioVendaAtom.state!.replaceAll(',', '.')
+        : '',
   );
 
   final product = Product(
@@ -166,7 +170,7 @@ final addProductAction = atomAction((set) async {
     CEST: productCESTAtom.state,
     precoMedioUnitario: productPrecoMedioUnitario,
     precoMedioVenda: productPrecoMedioVenda,
-    description: productDescriptionAtom.state.trim(),
+    description: productDescriptionAtom.state?.trim(),
   );
 
   try {
@@ -261,6 +265,13 @@ final updateGPCBrickAction = atomAction1<GpcBrickModel?>((set, value) {
   set(detailProductgpcBrickSelectedAtom, value);
 });
 
+final updateProductCategoriaAction = atomAction1<Categories>((set, value) {
+  set(detailProductCategoryAtom, value);
+});
+
+final updateProductUComAction = atomAction1<String?>((set, value) {
+  set(detailProductUComAtom, value);
+});
 final updateProductAverageUnitPriceAction = atomAction1<String?>((set, value) {
   set(detailProductPrecoMedioUnitarioAtom, value);
 });
@@ -290,15 +301,7 @@ final addGpcBrickToListUpdateAction = atomAction1<List<GpcBrickModel>>((
   set(gpcBrickListUpdateAtom, [...gpcBrick]);
 });
 
-final updateProductCategoriaAction = atomAction1<Categories>((set, value) {
-  set(detailProductCategoryAtom, value);
-});
-
-final updateProductUComAction = atomAction1<String?>((set, value) {
-  set(detailProductUComAtom, value);
-});
-
-final updateSelectedManufacturerAction = atomAction1<Manufacturer>((
+final updateSelectedManufacturerAction = atomAction1<Manufacturer?>((
   set,
   selected,
 ) {
@@ -314,6 +317,109 @@ final clearSelectedManufacturerAndFilterUpdateAction = atomAction((set) {
   set(filterManufacturersUpdateAtom, null);
 });
 
-final updateProductDesciptionAction = atomAction1<String>((set, value) {
+final updateProductDesciptionAction = atomAction1<String?>((set, value) {
   set(detailProductDescriptionAtom, value);
+});
+
+final updateProductAction = atomAction1<Product>((set, currentProduct) async {
+  set(detailProductStateAtom, const DetailProductStates.loading());
+
+  final ProductRepository productRepository = ProductRepository(
+    getIt<ProductServices>(),
+  );
+
+  final updatedProduct = currentProduct.copyWith(
+    // Use a conditional expression to only update if the existing field is null
+    cProd: currentProduct.cProd, //Always updated
+    xProd:
+        currentProduct.xProd ??
+        detailProductXProdAtom.state?.toUpperCase().trim(),
+    cEAN: currentProduct.cEAN ?? detailProductEanAtom.state,
+    NCM: currentProduct.NCM ?? detailProductNCMAtom.state,
+    CEST: currentProduct.CEST ?? detailProductCESTAtom.state,
+    gpcFamilyCode:
+        currentProduct.gpcFamilyCode ??
+        detailProductgpcFamilySelectedAtom.state?.familyCode,
+    gpcFamilyDescription:
+        currentProduct.gpcFamilyDescription ??
+        detailProductgpcFamilySelectedAtom.state?.familyDescription.trim(),
+    gpcClassCode:
+        currentProduct.gpcClassCode ??
+        detailProductgpcClassSelectedAtom.state?.classCode,
+    gpcClassDescription:
+        currentProduct.gpcClassDescription ??
+        detailProductgpcClassSelectedAtom.state?.classDescription.trim(),
+    gpcBrickCode:
+        currentProduct.gpcBrickCode ??
+        detailProductgpcBrickSelectedAtom.state?.brickCode,
+    gpcBrickDescription:
+        currentProduct.gpcBrickDescription ??
+        detailProductgpcBrickSelectedAtom.state?.brickDescription.trim(),
+    gpcBrickDefinition:
+        currentProduct.gpcBrickDefinition ??
+        detailProductgpcBrickSelectedAtom.state?.brickDefinition.trim(),
+    category:
+        currentProduct.category ?? detailProductCategoryAtom.state.documentId,
+    categoryName:
+        currentProduct.categoryName ?? detailProductCategoryAtom.state.iconName,
+    uCom: currentProduct.uCom ?? detailProductUComAtom.state?.trim(),
+    manufacturerBrand:
+        currentProduct.manufacturerBrand ??
+        selectedManufacturersUpdateAtom.state?.name.trim(),
+    CNPJFab:
+        currentProduct.CNPJFab ?? selectedManufacturersUpdateAtom.state?.cnpj,
+    manufacturerImageUrl:
+        currentProduct.manufacturerImageUrl ??
+        selectedManufacturersUpdateAtom.state?.imageUrl,
+
+    precoMedioUnitario:
+        currentProduct.precoMedioUnitario ??
+        double.tryParse(
+          detailProductPrecoMedioUnitarioAtom.state != null
+              ? detailProductPrecoMedioUnitarioAtom.state!.replaceAll(',', '.')
+              : '',
+        ),
+    precoMedioVenda:
+        currentProduct.precoMedioVenda ??
+        double.tryParse(
+          detailProductPrecoMedioVendaAtom.state != null
+              ? detailProductPrecoMedioVendaAtom.state!.replaceAll(',', '.')
+              : '',
+        ),
+    description:
+        currentProduct.description ??
+        detailProductDescriptionAtom.state?.trim(),
+  );
+
+  try {
+    await productRepository.updateProduct(updatedProduct);
+
+    final updatedProductMap = updatedProduct.toMap();
+
+    setSelectedCardAction(
+      (updatedProductMap['completionPercentage']! * 14) as int,
+    );
+
+    //clear all atom fields
+    updateXProdAction(null);
+    updateEanAction(null);
+    updateNCMAction(null);
+    updateCESTAction(null);
+    updateGPCFamilyAction(null);
+    updateGPCClassAction(null);
+    updateGPCBrickAction(null);
+    updateProductCategoriaAction(Categories.empty());
+    updateProductUComAction(null);
+    updateProductAverageUnitPriceAction(null);
+    updateProductAverageSellPriceAction(null);
+    clearSelectedManufacturerAndFilterUpdateAction();
+    updateProductDesciptionAction(null);
+
+    set(
+      detailProductStateAtom,
+      const DetailProductStatesSuccess('Produto atualizado com sucesso!'),
+    );
+  } catch (e) {
+    set(detailProductStateAtom, DetailProductStatesError(e.toString()));
+  }
 });

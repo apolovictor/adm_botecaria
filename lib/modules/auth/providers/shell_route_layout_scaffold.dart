@@ -91,6 +91,9 @@ class LayoutScaffold extends StatelessWidget with HookMixin {
                               ? IconButton(
                                 onPressed: () {
                                   setSelectedProductAction(null);
+                                  updateGPCFamilyAction(null);
+                                  updateGPCClassAction(null);
+                                  updateGPCBrickAction(null);
                                   context.go('/home');
                                 },
                                 icon: Icon(Icons.arrow_back),

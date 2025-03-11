@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import '../asp/actions.dart';
 import '../models/products_model.dart';
 import '../repositories/product_repository.dart';
 
@@ -21,6 +22,12 @@ class UpdateImageProductInteractor {
           await _productRepository.updateImageOfProductOnFirestore(
             product,
             imageUrlResponse,
+          );
+
+          final updatedProductMap = product.toMap();
+
+          setSelectedCardAction(
+            (updatedProductMap['completionPercentage']! * 14) as int,
           );
           return imageUrlResponse;
         } catch (e) {
