@@ -34,7 +34,7 @@ final setProductNCMAction = atomAction1<double?>((set, value) {
 });
 
 final setProductCategoriaAction = atomAction1<Categories>((set, value) {
-  set(productCategoryaAtom, value);
+  set(productCategoryAtom, value);
 });
 final setProductUComAction = atomAction1<String>((set, value) {
   set(productUComAtom, value);
@@ -147,7 +147,7 @@ final addProductAction = atomAction((set) async {
   final product = Product(
     cProd: productCodeAtom.state.toUpperCase().trim(),
     cEAN: productEanAtom.state,
-    xProd: productNameAtom.state.toUpperCase().trim(),
+    xProd: productNameAtom.state?.toUpperCase().trim(),
     NCM: productNCMAtom.state,
     gpcFamilyCode: gpcFamilySelectedAtom.state?.familyCode,
     gpcFamilyDescription: gpcFamilySelectedAtom.state?.familyDescription.trim(),
@@ -156,9 +156,9 @@ final addProductAction = atomAction((set) async {
     gpcBrickCode: gpcBrickSelectedAtom.state?.brickCode,
     gpcBrickDescription: gpcBrickSelectedAtom.state?.brickDescription.trim(),
     gpcBrickDefinition: gpcBrickSelectedAtom.state?.brickDefinition.trim(),
-    category: productCategoryaAtom.state.documentId,
-    categoryName: productCategoryaAtom.state.iconName,
-    uCom: productUComAtom.state.trim(),
+    category: productCategoryAtom.state.documentId,
+    categoryName: productCategoryAtom.state.iconName,
+    uCom: productUComAtom.state?.trim(),
     imageUrl: null,
     manufacturerBrand: selectedManufacturersAtom.state?.name.trim(),
     CNPJFab: selectedManufacturersAtom.state?.cnpj,
@@ -239,10 +239,81 @@ final setDetailProductStateInitialAction = atomAction((set) {
 
 //UPDATE ACTIONS
 
-final updateProductAverageUnitPriceAction = atomAction1<String>((set, value) {
+final updateXProdAction = atomAction1<String?>((set, value) {
+  set(detailProductXProdAtom, value);
+});
+final updateEanAction = atomAction1<int?>((set, value) {
+  set(detailProductEanAtom, value);
+});
+final updateNCMAction = atomAction1<int?>((set, value) {
+  set(detailProductNCMAtom, value);
+});
+final updateCESTAction = atomAction1<int?>((set, value) {
+  set(detailProductCESTAtom, value);
+});
+final updateGPCFamilyAction = atomAction1<GpcFamilyModel?>((set, value) {
+  set(detailProductgpcFamilySelectedAtom, value);
+});
+final updateGPCClassAction = atomAction1<GpcClassModel?>((set, value) {
+  set(detailProductgpcClassSelectedAtom, value);
+});
+final updateGPCBrickAction = atomAction1<GpcBrickModel?>((set, value) {
+  set(detailProductgpcBrickSelectedAtom, value);
+});
+
+final updateProductAverageUnitPriceAction = atomAction1<String?>((set, value) {
   set(detailProductPrecoMedioUnitarioAtom, value);
 });
 
-final updateProductAverageSellPriceAction = atomAction1<String>((set, value) {
+final updateProductAverageSellPriceAction = atomAction1<String?>((set, value) {
   set(detailProductPrecoMedioVendaAtom, value);
+});
+
+final addGpcFamilyToListUpdateAction = atomAction1<List<GpcFamilyModel>>((
+  set,
+  gpcFamily,
+) {
+  set(gpcFamilyUpdateListAtom, [...gpcFamily]);
+});
+
+final addGpcClassToListUpdateAction = atomAction1<List<GpcClassModel>>((
+  set,
+  gpcClass,
+) {
+  set(gpcClassListUpdateAtom, [...gpcClass]);
+});
+
+final addGpcBrickToListUpdateAction = atomAction1<List<GpcBrickModel>>((
+  set,
+  gpcBrick,
+) {
+  set(gpcBrickListUpdateAtom, [...gpcBrick]);
+});
+
+final updateProductCategoriaAction = atomAction1<Categories>((set, value) {
+  set(detailProductCategoryAtom, value);
+});
+
+final updateProductUComAction = atomAction1<String?>((set, value) {
+  set(detailProductUComAtom, value);
+});
+
+final updateSelectedManufacturerAction = atomAction1<Manufacturer>((
+  set,
+  selected,
+) {
+  set(selectedManufacturersUpdateAtom, selected);
+});
+
+final filterManufacturerUpdateAction = atomAction1<dynamic>((set, filter) {
+  set(filterManufacturersUpdateAtom, filter);
+});
+
+final clearSelectedManufacturerAndFilterUpdateAction = atomAction((set) {
+  set(selectedManufacturersUpdateAtom, null);
+  set(filterManufacturersUpdateAtom, null);
+});
+
+final updateProductDesciptionAction = atomAction1<String>((set, value) {
+  set(detailProductDescriptionAtom, value);
 });

@@ -15,11 +15,11 @@ import '../providers/states/product_states.dart';
 final selectedImageState = atom<Uint8List?>(null);
 final productCodeAtom = atom<String>('');
 final productEanAtom = atom<int?>(null);
-final productNameAtom = atom<String>('');
+final productNameAtom = atom<String?>(null);
 final productNCMAtom = atom<int?>(null);
 
-final productCategoryaAtom = atom<Categories>(Categories.empty());
-final productUComAtom = atom<String>('');
+final productCategoryAtom = atom<Categories>(Categories.empty());
+final productUComAtom = atom<String?>(null);
 final productManufacturerBrandAtom = atom<String>('');
 final productCNPJFabAtom = atom<String>('');
 final productCESTAtom = atom<int?>(null);
@@ -60,18 +60,31 @@ final detailProductStateAtom = atom<DetailProductStates>(
 final selectedImageOfDetailProductState = atom<Uint8List?>(null);
 
 final detailProductCodeAtom = atom<String>('');
+final detailProductXProdAtom = atom<String?>(null);
 final detailProductEanAtom = atom<int?>(null);
-final detailProductNameAtom = atom<String>('');
 final detailProductNCMAtom = atom<int?>(null);
-
-final detailProductCategoryaAtom = atom<Categories>(Categories.empty());
-final detailProductUComAtom = atom<String>('');
-final detailProductManufacturerBrandAtom = atom<String>('');
-final detailProductCNPJFabAtom = atom<String>('');
 final detailProductCESTAtom = atom<int?>(null);
-final detailProductPrecoMedioUnitarioAtom = atom<String>('0');
-final detailProductPrecoMedioVendaAtom = atom<String>('0');
+
+final detailProductCategoryAtom = atom<Categories>(Categories.empty());
+final detailProductUComAtom = atom<String?>(null);
+final selectedManufacturersUpdateAtom = atom<Manufacturer?>(null);
+final filterManufacturersUpdateAtom = atom<dynamic>(null);
+
+// final detailProductManufacturerBrandAtom = atom<String>('');
+// final detailProductCNPJFabAtom = atom<String>('');
+final detailProductPrecoMedioUnitarioAtom = atom<String?>(null);
+final detailProductPrecoMedioVendaAtom = atom<String?>(null);
 final detailProductDescriptionAtom = atom<String>('');
 final detailProductgpcFamilySelectedAtom = atom<GpcFamilyModel?>(null);
 final detailProductgpcClassSelectedAtom = atom<GpcClassModel?>(null);
 final detailProductgpcBrickSelectedAtom = atom<GpcBrickModel?>(null);
+
+final gpcFamilyUpdateListAtom = atom<List<GpcFamilyModel>>([]);
+
+final gpcClassListUpdateAtom = atom<List<GpcClassModel>>([]);
+
+final gpcBrickListUpdateAtom = atom<List<GpcBrickModel>>([]);
+
+final scrollControllerCardGoalsAtom = atom<ScrollController>(
+  ScrollController(),
+);

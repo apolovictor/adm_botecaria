@@ -2,10 +2,10 @@ import 'package:asp/asp.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../asp/actions.dart';
-import '../../asp/atoms.dart';
-import '../../asp/selectors.dart';
-import '../../providers/category_icon_provider.dart';
+import '../../../asp/actions.dart';
+import '../../../asp/atoms.dart';
+import '../../../asp/selectors.dart';
+import '../../../providers/category_icon_provider.dart';
 
 class CategoriesField extends ConsumerWidget {
   const CategoriesField({super.key});
@@ -18,7 +18,7 @@ class CategoriesField extends ConsumerWidget {
 
         final categoriesList = get(categoriesListAtom);
 
-        categoriesList.sort((a, b) => a.iconName.compareTo(b.iconName));
+        categoriesList.sort((a, b) => a.iconName!.compareTo(b.iconName!));
         return SizedBox(
           width: double.maxFinite,
           height: 60,
@@ -54,7 +54,7 @@ class CategoriesField extends ConsumerWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(e.iconName),
+                          Text(e.iconName!),
                           SizedBox(
                             height: 20,
                             width: 20,

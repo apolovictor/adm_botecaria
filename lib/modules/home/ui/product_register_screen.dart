@@ -1,6 +1,6 @@
 import 'package:adm_botecaria/modules/home/providers/states/product_states.dart';
-import 'package:adm_botecaria/modules/home/ui/widgets/gpc_bricks_field.dart';
-import 'package:adm_botecaria/modules/home/ui/widgets/gpc_family_field.dart';
+import 'package:adm_botecaria/modules/home/ui/widgets/register/gpc_bricks_field.dart';
+import 'package:adm_botecaria/modules/home/ui/widgets/register/gpc_family_field.dart';
 import 'package:asp/asp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,10 +8,10 @@ import '../../../shared/helpers/validators.dart';
 import '../asp/actions.dart';
 import '../asp/atoms.dart';
 import '../helpers/helpers.dart';
-import 'widgets/brand_field.dart';
-import 'widgets/categories_field.dart';
-import 'widgets/gpc_class_field.dart';
-import 'widgets/medidas_field.dart';
+import 'widgets/register/brand_field.dart';
+import 'widgets/register/categories_field.dart';
+import 'widgets/register/gpc_class_field.dart';
+import 'widgets/register/medidas_field.dart';
 import 'widgets/specification_table.dart';
 import 'widgets/text_field_widget.dart';
 
@@ -29,7 +29,6 @@ class ProductRegisterPage extends StatelessWidget with HookMixin {
     final isPositionFloatingButton = useAtomState(isPositionFloatingButtonAtom);
     final gpcFamilySelected = useAtomState(gpcFamilySelectedAtom);
     final gpcClassSelected = useAtomState(gpcClassSelectedAtom);
-
     final productState = useAtomState(productStateAtom);
 
     useAtomEffect((get) {
@@ -193,6 +192,20 @@ class ProductRegisterPage extends StatelessWidget with HookMixin {
                       (value) => setProductNCMAction(double.tryParse(value)),
                 ),
                 SizedBox(height: 10),
+                //!! validator max length 7
+                getTextField(
+                  labelText: 'CEST',
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  validator: cest,
+                  focusNodeCurrent: focusNodes[6],
+                  onFieldSubmitted:
+                      (_) => FocusScope.of(context).requestFocus(focusNodes[7]),
+
+                  onChanged:
+                      (value) => setProductCESTAction(double.tryParse(value)),
+                ),
+                SizedBox(height: 10),
 
                 //!! DropDown
                 GpcFamilyField(focusNode: focusNodes[4]),
@@ -210,20 +223,7 @@ class ProductRegisterPage extends StatelessWidget with HookMixin {
                   onFieldSubmitted:
                       (_) => FocusScope.of(context).requestFocus(focusNodes[6]),
                 ),
-                SizedBox(height: 10),
-                //!! validator max length 7
-                getTextField(
-                  labelText: 'CEST',
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  validator: cest,
-                  focusNodeCurrent: focusNodes[6],
-                  onFieldSubmitted:
-                      (_) => FocusScope.of(context).requestFocus(focusNodes[7]),
 
-                  onChanged:
-                      (value) => setProductCESTAction(double.tryParse(value)),
-                ),
                 SizedBox(height: 10),
                 getTextField(
                   labelText: 'Preço médio unitário (Interno)',

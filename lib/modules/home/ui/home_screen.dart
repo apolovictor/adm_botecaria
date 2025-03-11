@@ -20,46 +20,30 @@ class HomePage extends StatelessWidget with HookMixin {
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
     useAtomState(getAdmProductsSelector);
-    final scrollController = useAtomState(scrollControllerCardGoalsSelector);
+    final scrollController = useAtomState(scrollControllerCardGoalsAtom);
 
-    // if (scrollController.hasClients) {
-    //   print(scrollController.position.pixels);
-    // }
-    // selectedCardAtom;
     final List<Product> productList = useAtomState(productListAtom);
     final selectedCard = useAtomState(selectedCardAtom);
 
     // Function to scroll to the selected card
-    void _scrollToSelectedCard(
+    void scrollToSelectedCard(
       ScrollController controller,
       int selectedIndex,
       double cardWidth,
       double screenWidth,
     ) {
-      // Calculate the scroll offset based on the selected card's position.
+      final int itemCount = requiredFields;
 
-      // Because the list is reversed, we need to calculate the position from the *end*.
-      final int itemCount =
-          requiredFields; // Total number of items (including 14)
-
-      //The last element is displayed separately. So subtract from itemCount
-      int visibleIndex =
-          itemCount - 1; //index for items 1 to 13 on reverse order list.
+      int visibleIndex = itemCount - 1;
       if (selectedIndex != 14) {
         visibleIndex = itemCount - selectedIndex;
       }
 
-      // Calculate offset considering centering.
       double offset =
           (visibleIndex * cardWidth) - (screenWidth / 1.15 - cardWidth / 2);
 
-      // Keep within bounds of the scrollable area.
       offset = offset.clamp(0.0, controller.position.maxScrollExtent);
 
-      print('visibleIndex ==== $visibleIndex');
-      print('offset ==== $offset');
-
-      // Scroll to the calculated offset with animation.
       controller.animateTo(
         offset,
         duration: const Duration(milliseconds: 300),
@@ -68,7 +52,7 @@ class HomePage extends StatelessWidget with HookMixin {
     }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollToSelectedCard(scrollController, selectedCard, 125, width);
+      scrollToSelectedCard(scrollController, selectedCard, 125, width);
     });
 
     final result =
@@ -92,11 +76,18 @@ class HomePage extends StatelessWidget with HookMixin {
                       width: 125,
                       child: Card(
                         elevation: selectedCard == (index + 1) ? 0 : 5,
-                        child: Center(
-                          child: CircularPercentIndicator(
-                            percent: index / requiredFields,
-                            index: index + 1,
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            CircularPercentIndicator(
+                              percent: index / requiredFields,
+                              index: index + 1,
+                            ),
+                            Text(
+                              'Total ${productList.where((e) => e.completionPercentage == ((index + 1) / requiredFields)).length.toString()}',
+                              style: TextStyle(fontWeight: FontWeight.w700),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -129,8 +120,16 @@ class HomePage extends StatelessWidget with HookMixin {
                   width: width * 0.35,
                   child: Card(
                     elevation: selectedCard == 14 ? 0 : 5,
-                    child: Center(
-                      child: CircularPercentIndicator(index: 14, percent: 1),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                      children: [
+                        CircularPercentIndicator(index: 14, percent: 1),
+                        Text(
+                          'Total ${productList.where((e) => e.completionPercentage == 1).length.toString()}',
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                      ],
                     ),
                   ),
                 ),

@@ -92,7 +92,6 @@ class LayoutScaffold extends StatelessWidget with HookMixin {
                                 onPressed: () {
                                   setSelectedProductAction(null);
                                   context.go('/home');
-                                  // Navigator.pop(context);
                                 },
                                 icon: Icon(Icons.arrow_back),
                               )

@@ -1,7 +1,6 @@
 import 'package:adm_botecaria/modules/home/models/gpc_model.dart';
 import 'package:adm_botecaria/modules/home/models/unidades_de_medida_model.dart';
 import 'package:asp/asp.dart';
-import 'package:flutter/material.dart';
 import '../../../setup_locator.dart';
 import '../models/category_model.dart';
 import '../models/manufacturers_model.dart';
@@ -155,10 +154,54 @@ final getAdmProductsSelector = selector((get) {
   });
 });
 
-final scrollControllerCardGoalsSelector = selector<ScrollController>((get) {
-  final selectedCard = get(selectedCardAtom);
+// UPDATE SELECTORS
 
-  print('selectedCard === $selectedCard');
+final getGpcFamilyUpdateSelector = selector((get) {
+  final GpcRepository gpcRepository = GpcRepository(getIt<GpcService>());
+  final gpcFamilyStream = gpcRepository.getGpcFamilyStream().map(
+    (snapshot) =>
+        snapshot.docs.map((doc) => GpcFamilyModel.fromDoc(doc)).toList(),
+  );
 
-  return ScrollController();
+  gpcFamilyStream.listen((gpcFamily) {
+    addGpcFamilyToListUpdateAction(gpcFamily);
+  });
+});
+
+final getGpcClassUpdateSelector = selector((get) {
+  final GpcRepository gpcRepository = GpcRepository(getIt<GpcService>());
+  final detailProductgpcFamilySelected = get(
+    detailProductgpcFamilySelectedAtom,
+  );
+  if (detailProductgpcFamilySelected != null) {
+    final classStream = gpcRepository
+        .getGpcClassStream(detailProductgpcFamilySelected)
+        .map(
+          (snapshot) =>
+              snapshot.docs.map((doc) => GpcClassModel.fromDoc(doc)).toList(),
+        );
+
+    classStream.listen((gpcClass) {
+      addGpcClassToListUpdateAction(gpcClass);
+    });
+  }
+});
+
+final getGpcBrickUpdateSelector = selector((get) {
+  final GpcRepository gpcRepository = GpcRepository(getIt<GpcService>());
+  final gpcFamilySelected = get(detailProductgpcFamilySelectedAtom);
+  final gpcClassSelected = get(detailProductgpcClassSelectedAtom);
+
+  if (gpcFamilySelected != null && gpcClassSelected != null) {
+    final bricksStream = gpcRepository
+        .getGpcBrickStream(gpcFamilySelected, gpcClassSelected)
+        .map(
+          (snapshot) =>
+              snapshot.docs.map((doc) => GpcBrickModel.fromDoc(doc)).toList(),
+        );
+
+    bricksStream.listen((gpcBrick) {
+      addGpcBrickToListUpdateAction(gpcBrick);
+    });
+  }
 });

@@ -1,18 +1,22 @@
 import 'package:asp/asp.dart';
 import 'package:flutter/material.dart';
 
-import '../../asp/actions.dart';
-import '../../asp/atoms.dart';
-import '../../asp/selectors.dart';
+import '../../../asp/actions.dart';
+import '../../../asp/atoms.dart';
+import '../../../asp/selectors.dart';
 
-class GpcClassField extends StatelessWidget with HookMixin {
-  const GpcClassField({super.key});
+class GpcClassUpdateField extends StatelessWidget with HookMixin {
+  const GpcClassUpdateField({super.key});
 
   @override
   Widget build(BuildContext context) {
-    useAtomState(getGpcClassSelector);
+    useAtomState(getGpcClassUpdateSelector);
 
-    final gpcClassList = useAtomState(gpcClassListAtom);
+    final gpcClassList = useAtomState(gpcClassListUpdateAtom);
+
+    final detailProductgpcClassSelected = useAtomState(
+      detailProductgpcClassSelectedAtom,
+    );
     if (gpcClassList.isNotEmpty) {
       gpcClassList.sort(
         (a, b) => a.classDescription.compareTo(b.classDescription),
@@ -37,10 +41,19 @@ class GpcClassField extends StatelessWidget with HookMixin {
                 borderRadius: BorderRadius.circular(12),
               ),
               filled: true,
-              // hintText: productCategory,
+              fillColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+              suffixIcon:
+                  detailProductgpcClassSelected != null
+                      ? IconButton(
+                        onPressed: () {
+                          updateGPCClassAction(null);
+                        },
+                        icon: Icon(Icons.close),
+                      )
+                      : null,
             ),
-            // value: widget.category,
-            onChanged: (value) => setGpcClassSelectedAction(value!),
+            value: detailProductgpcClassSelected,
+            onChanged: (value) => updateGPCClassAction(value!),
             items:
                 gpcClassList.map((e) {
                   return DropdownMenuItem(

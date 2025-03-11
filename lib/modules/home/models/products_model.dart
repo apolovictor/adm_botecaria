@@ -160,64 +160,48 @@ class Product {
     int totalFields = requiredFields; //Total de campos essenciais
     int filledFields = 1; //Total de campos preenchidos
     if (imageUrl != null) {
-      print('imageUrl');
       filledFields++;
     }
     if (xProd != null && xProd!.isNotEmpty) {
       filledFields++;
-      print('xProd');
     }
     if (cEAN != null) {
       filledFields++;
-      print('cEan');
     }
     if (NCM != null) {
       filledFields++;
-      print('NCM');
     }
     if (gpcFamilyCode != null) {
       filledFields++;
-      print('gpcFamily');
     }
     if (gpcClassCode != null) {
       filledFields++;
-      print('gpcClass');
     }
     if (gpcBrickCode != null) {
       filledFields++;
-      print('gpcBrick');
     }
     if (category != null && category!.isNotEmpty) {
       filledFields++;
-      print('ca4tegory');
     }
     if (uCom != null && uCom!.isNotEmpty) {
       filledFields++;
-      print('uCom');
     }
 
     if ((manufacturerBrand != null && manufacturerBrand!.isNotEmpty) ||
         (CNPJFab != null)) {
       filledFields++;
-      print('manufacturer');
     }
     //Verifica campos adicionais e opcionais para tributação ST
     if (CEST != null) {
       filledFields++;
-      print('CEST');
     }
 
     if (precoMedioUnitario != null) {
       filledFields++;
-      print('unitario');
     }
     if (precoMedioVenda != null) {
       filledFields++;
-      print('venda');
     }
-
-    print('filledFields ==== $filledFields');
-    print('media ==== ${filledFields / totalFields}');
 
     return (filledFields / totalFields).clamp(0.0, 1.0);
   }
@@ -286,22 +270,21 @@ class Product {
       imageUrl: data['imageUrl'] as String?,
       category: data['category'] as String?,
       categoryName: data['categoryName'] as String?,
-      gpcSegmentCode: (data['gpcSegmentCode'] as num?)?.toInt() ?? 0,
+      gpcSegmentCode: (data['gpcSegmentCode'] as num?)?.toInt(),
       gpcSegmentDescription: data['gpcSegmentDescription'] as String?,
-      gpcFamilyCode: (data['gpcFamilyCode'] as num?)?.toInt() ?? 0,
+      gpcFamilyCode: (data['gpcFamilyCode'] as num?)?.toInt(),
       gpcFamilyDescription: data['gpcFamilyDescription'] as String?,
-      gpcClassCode: (data['gpcClassCode'] as num?)?.toInt() ?? 0,
+      gpcClassCode: (data['gpcClassCode'] as num?)?.toInt(),
       gpcClassDescription: data['gpcClassDescription'] as String?,
-      gpcBrickCode: (data['gpcBrickCode'] as num?)?.toInt() ?? 0,
+      gpcBrickCode: (data['gpcBrickCode'] as num?)?.toInt(),
       gpcBrickDescription: data['gpcBrickDescription'] as String?,
       gpcBrickDefinition: data['gpcBrickDefinition'] as String?,
       manufacturerBrand: data['manufacturerBrand'] as String?,
       CNPJFab: data['CNPJFab'] as List<dynamic>?,
       manufacturerImageUrl: data['manufacturerImageUrl'] as String?,
       description: data['description'] as String?,
-      precoMedioUnitario:
-          (data['precoMedioUnitario'] as num?)?.toDouble() ?? 0.0,
-      precoMedioVenda: (data['precoMedioVenda'] as num?)?.toDouble() ?? 0.0,
+      precoMedioUnitario: (data['precoMedioUnitario'] as num?)?.toDouble(),
+      precoMedioVenda: (data['precoMedioVenda'] as num?)?.toDouble(),
       completionPercentage:
           (data['completionPercentage'] as num?)?.toDouble() ?? 0.0,
       uCom: data['uCom'] as String?,

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class Categories extends Equatable {
   final String? documentId;
   final int idIcon;
-  final String iconName;
+  final String? iconName;
   final String svgPath;
   final String primaryColor;
   final String secondaryColor;
@@ -68,23 +68,23 @@ class Categories extends Equatable {
   static Categories empty() {
     return Categories(
       idIcon: 0,
-      iconName: '',
+      iconName: null,
       svgPath: '',
       primaryColor: '',
       secondaryColor: '',
       status: 0,
-      documentId: '',
+      documentId: null,
     );
   }
 
   @override
   List<Object?> get props => [
-        documentId,
-        iconName,
-        idIcon,
-        primaryColor,
-        secondaryColor,
-        status,
-        svgPath
-      ]; // List properties used for equality
+    documentId,
+    iconName,
+    idIcon,
+    primaryColor,
+    secondaryColor,
+    status,
+    svgPath,
+  ]; // List properties used for equality
 }
