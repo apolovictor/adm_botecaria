@@ -173,6 +173,7 @@ final getGpcClassUpdateSelector = selector((get) {
   final detailProductgpcFamilySelected = get(
     detailProductgpcFamilySelectedAtom,
   );
+  final selectedProduct = get(selectedProductAtom);
   if (detailProductgpcFamilySelected != null) {
     final classStream = gpcRepository
         .getGpcClassStream(detailProductgpcFamilySelected)
@@ -184,7 +185,7 @@ final getGpcClassUpdateSelector = selector((get) {
     classStream.listen((gpcClass) {
       addGpcClassToListUpdateAction(gpcClass);
     });
-  }
+  } else if (selectedProduct?.gpcFamilyCode != null) {}
 });
 
 final getGpcBrickUpdateSelector = selector((get) {

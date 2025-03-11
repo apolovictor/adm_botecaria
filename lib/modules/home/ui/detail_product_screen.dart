@@ -84,59 +84,53 @@ class DetailProductPage extends StatelessWidget with HookMixin {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             detailProductState is! DetailProductStatesLoading
-                                ? SizedBox(
-                                  child:
-                                      selectedProduct.imageUrl != null
-                                          ? Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              SizedBox(
-                                                height: 120,
-                                                width: 120,
-                                                child: Stack(
-                                                  children: [
-                                                    Hero(
-                                                      tag:
-                                                          selectedProduct
-                                                              .documentId!,
-                                                      child:
-                                                          DetailProductCardImage(
-                                                            product:
-                                                                selectedProduct,
-                                                          ),
-                                                    ),
-                                                    // Positioned(
-                                                    //   bottom: 0,
-                                                    //   right: 0,
-                                                    //   child: Row(
-                                                    //     mainAxisAlignment:
-                                                    //         MainAxisAlignment.center,
-                                                    //     children: [
-                                                    //       IconButton(
-                                                    //         icon: Icon(
-                                                    //           Icons.delete,
-                                                    //           size: 30,
-                                                    //           color: Colors.grey.shade500,
-                                                    //         ),
-                                                    //         onPressed: () async {
-                                                    //           // await removeImageOfProductAction(
-                                                    //           //   widget.product,
-                                                    //           // );
-                                                    //         },
-                                                    //       ),
-                                                    //     ],
-                                                    //   ),
-                                                    // ),
-                                                  ],
+                                ? Hero(
+                                  tag: selectedProduct.documentId!,
+                                  child: SizedBox(
+                                    child:
+                                        selectedProduct.imageUrl != null
+                                            ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  height: 120,
+                                                  width: 120,
+                                                  child: Stack(
+                                                    children: [
+                                                      DetailProductCardImage(
+                                                        product:
+                                                            selectedProduct,
+                                                      ),
+                                                      // Positioned(
+                                                      //   bottom: 0,
+                                                      //   right: 0,
+                                                      //   child: Row(
+                                                      //     mainAxisAlignment:
+                                                      //         MainAxisAlignment.center,
+                                                      //     children: [
+                                                      //       IconButton(
+                                                      //         icon: Icon(
+                                                      //           Icons.delete,
+                                                      //           size: 30,
+                                                      //           color: Colors.grey.shade500,
+                                                      //         ),
+                                                      //         onPressed: () async {
+                                                      //           // await removeImageOfProductAction(
+                                                      //           //   widget.product,
+                                                      //           // );
+                                                      //         },
+                                                      //       ),
+                                                      //     ],
+                                                      //   ),
+                                                      // ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          )
-                                          : selectedImage != null
-                                          ? Hero(
-                                            tag: selectedProduct.documentId!,
-                                            child: SizedBox(
+                                              ],
+                                            )
+                                            : selectedImage != null
+                                            ? SizedBox(
                                               height: 200,
                                               width: 200,
                                               child: Stack(
@@ -174,75 +168,77 @@ class DetailProductPage extends StatelessWidget with HookMixin {
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                          )
-                                          : Container(
-                                            height: 100,
-                                            width: 100,
-                                            decoration: BoxDecoration(
-                                              gradient: LinearGradient(
-                                                colors: [
-                                                  Colors.white,
-                                                  Colors.grey,
+                                            )
+                                            : Container(
+                                              height: 100,
+                                              width: 100,
+                                              decoration: BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Colors.white,
+                                                    Colors.grey,
+                                                  ],
+                                                  begin: Alignment.topLeft,
+                                                  end: Alignment.bottomRight,
+                                                ),
+                                                color: Colors.grey,
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                      (width) * 0.3,
+                                                    ),
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                    color: Colors.black45,
+                                                    offset: Offset(4, 4),
+                                                    blurRadius: 2,
+                                                  ),
+                                                  BoxShadow(
+                                                    color: Colors.white,
+                                                    offset: Offset(-4, -4),
+                                                    blurRadius: 2,
+                                                  ),
                                                 ],
-                                                begin: Alignment.topLeft,
-                                                end: Alignment.bottomRight,
                                               ),
-                                              color: Colors.grey,
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                    (width) * 0.3,
-                                                  ),
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                  color: Colors.black45,
-                                                  offset: Offset(4, 4),
-                                                  blurRadius: 2,
-                                                ),
-                                                BoxShadow(
-                                                  color: Colors.white,
-                                                  offset: Offset(-4, -4),
-                                                  blurRadius: 2,
-                                                ),
-                                              ],
-                                            ),
-                                            child: Stack(
-                                              children: [
-                                                MaterialButton(
-                                                  shape: const CircleBorder(),
-                                                  onPressed: () async {
-                                                    await getGalleryImageOfDetailProudct(
-                                                      250,
-                                                      250,
-                                                    );
-                                                  },
-                                                  child: Center(
-                                                    child:
-                                                        selectedImage != null &&
-                                                                selectedImage
-                                                                    .isNotEmpty
-                                                            ? ClipOval(
-                                                              child: Image.memory(
-                                                                selectedImage,
-                                                                fit:
-                                                                    BoxFit
-                                                                        .cover,
+                                              child: Stack(
+                                                children: [
+                                                  MaterialButton(
+                                                    shape: const CircleBorder(),
+                                                    onPressed: () async {
+                                                      await getGalleryImageOfDetailProudct(
+                                                        250,
+                                                        250,
+                                                      );
+                                                    },
+                                                    child: Center(
+                                                      child:
+                                                          selectedImage !=
+                                                                      null &&
+                                                                  selectedImage
+                                                                      .isNotEmpty
+                                                              ? ClipOval(
+                                                                child: Image.memory(
+                                                                  selectedImage,
+                                                                  fit:
+                                                                      BoxFit
+                                                                          .cover,
+                                                                ),
+                                                              )
+                                                              : Icon(
+                                                                Icons.add,
+                                                                color:
+                                                                    Colors
+                                                                        .white,
+                                                                size:
+                                                                    width *
+                                                                    0.3 /
+                                                                    2,
                                                               ),
-                                                            )
-                                                            : Icon(
-                                                              Icons.add,
-                                                              color:
-                                                                  Colors.white,
-                                                              size:
-                                                                  width *
-                                                                  0.3 /
-                                                                  2,
-                                                            ),
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
-                                          ),
+                                  ),
                                 )
                                 : Center(child: CircularProgressIndicator()),
                             SizedBox(height: 10),
@@ -679,7 +675,6 @@ class DetailProductPage extends StatelessWidget with HookMixin {
                           onpressed: () async {
                             if (_updateFormKey.currentState!.validate()) {
                               await updateProductAction(selectedProduct);
-                              context.go('/home');
                             } else {
                               return;
                             }

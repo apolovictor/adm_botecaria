@@ -328,6 +328,19 @@ final updateProductAction = atomAction1<Product>((set, currentProduct) async {
     getIt<ProductServices>(),
   );
 
+  if (detailProductgpcFamilySelectedAtom.state?.familyCode != null &&
+      detailProductgpcClassSelectedAtom.state?.classCode == null &&
+      detailProductgpcBrickSelectedAtom.state?.brickCode == null) {
+    set(
+      detailProductStateAtom,
+      DetailProductStatesError(
+        'GPC preenchido. Família, Class e Bloco são obrigatórios',
+      ),
+    );
+
+    return;
+  }
+
   final updatedProduct = currentProduct.copyWith(
     // Use a conditional expression to only update if the existing field is null
     cProd: currentProduct.cProd, //Always updated
@@ -396,7 +409,7 @@ final updateProductAction = atomAction1<Product>((set, currentProduct) async {
 
     final updatedProductMap = updatedProduct.toMap();
 
-    setSelectedCardAction(
+    await setSelectedCardAction(
       (updatedProductMap['completionPercentage']! * 14) as int,
     );
 
@@ -419,6 +432,7 @@ final updateProductAction = atomAction1<Product>((set, currentProduct) async {
       detailProductStateAtom,
       const DetailProductStatesSuccess('Produto atualizado com sucesso!'),
     );
+    return;
   } catch (e) {
     set(detailProductStateAtom, DetailProductStatesError(e.toString()));
   }

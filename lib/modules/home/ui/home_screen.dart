@@ -16,6 +16,7 @@ class HomePage extends StatelessWidget with HookMixin {
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setProductStateAction(ProductStatusStateInitial());
+      setDetailProductStateInitialAction();
     });
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
