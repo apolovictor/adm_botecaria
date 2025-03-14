@@ -177,6 +177,9 @@ final addProductAction = atomAction((set) async {
 
   try {
     await productRepository.addProduct(product, selectedImageState.state);
+    clearImagenInlineImageList();
+    clearProductImageAction();
+    setProductCodeAction('');
     setProductStateAction(ProductStatusStateAdded());
   } catch (e) {
     setProductStateAction(ProductStatusStateAddingError(e.toString()));

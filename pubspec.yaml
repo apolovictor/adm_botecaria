@@ -56,6 +56,7 @@ dependencies:
   barcode: ^2.2.9
   barcode_widget: ^2.0.4
   firebase_vertexai: ^1.4.0
+  image: ^4.5.3
 
 dev_dependencies:
   flutter_test:

@@ -139,8 +139,10 @@ class HomePage extends StatelessWidget with HookMixin {
           ),
         ),
         SizedBox(height: 20),
-        SingleChildScrollView(
-          child: Column(children: [...generateCardProducts(result)]),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(children: [...generateCardProducts(result)]),
+          ),
         ),
       ],
     );

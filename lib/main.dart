@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import 'firebase_options.dart';
 import 'modules/auth/asp/actions.dart';
 import 'modules/auth/providers/router_provider.dart';
@@ -12,9 +10,7 @@ import 'setup_locator.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  final model = FirebaseVertexAI.instance.imagenModel(
-    model: 'imagen-3.0-generate-002',
-  );
+
   setupLocator();
 
   runApp(const ProviderScope(child: MyApp())); // runApp *inside* the zone

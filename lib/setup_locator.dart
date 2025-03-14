@@ -64,7 +64,7 @@ void setupLocator() {
       model: 'imagen-3.0-generate-002',
       generationConfig: ImagenGenerationConfig(
         numberOfImages: 4,
-        negativePrompt: 'background color',
+        negativePrompt: 'shadows, gradients',
         aspectRatio: ImagenAspectRatio.square1x1,
         imageFormat: ImagenFormat.jpeg(compressionQuality: 10),
       ),
