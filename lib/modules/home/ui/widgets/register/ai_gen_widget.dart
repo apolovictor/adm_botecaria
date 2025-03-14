@@ -214,6 +214,8 @@ class _CenterCutPath extends CustomClipper<Path> {
 }
 
 class LoadingIndicator extends StatelessWidget {
+  const LoadingIndicator({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -253,7 +255,7 @@ class GradientCircle extends StatefulWidget {
 
   final double diameter;
 
-  GradientCircle({
+  const GradientCircle({
     super.key,
     required this.color1,
     required this.color2,

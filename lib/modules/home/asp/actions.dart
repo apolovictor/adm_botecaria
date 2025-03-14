@@ -493,7 +493,7 @@ final generationImagesAction = atomAction((set) async {
 
     final prompt =
         'One picuture for product ${promptAtom.state} on a opaque solid white color background. With thumbnail quality. Withou shadow, gradients';
-    print('prompt === $prompt');
+    debugPrint('prompt === $prompt');
     // To generate images, call `generateImages` with the text prompt
     final response = await imagenModel.generateImages(prompt);
 
@@ -512,7 +512,7 @@ final generationImagesAction = atomAction((set) async {
       debugPrint('Error: No images were generated.');
     }
   } catch (e) {
-    print('Gen AI error: $e');
+    debugPrint('Gen AI error: $e');
     setGenAiStateErrorAction(e.toString());
   }
 });

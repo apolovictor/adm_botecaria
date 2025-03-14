@@ -3,12 +3,9 @@
 import 'package:adm_botecaria/modules/home/ui/widgets/barcode.dart';
 import 'package:adm_botecaria/modules/home/ui/widgets/chip_widget.dart';
 import 'package:adm_botecaria/modules/home/ui/widgets/detail_manufacturer_card_image.dart';
-import 'package:adm_botecaria/setup_locator.dart';
 import 'package:asp/asp.dart';
-import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import '../../../shared/helpers/validators.dart';
 import '../asp/actions.dart';
 import '../asp/atoms.dart';
