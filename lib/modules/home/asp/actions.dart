@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:adm_botecaria/modules/home/models/gpc_model.dart';
 import 'package:adm_botecaria/modules/home/models/products_model.dart';
 import 'package:asp/asp.dart';
+import 'package:firebase_vertexai/firebase_vertexai.dart';
 import '../../../setup_locator.dart';
 import '../interactor/update_image_product_interactor.dart';
 import '../models/category_model.dart';
@@ -171,6 +172,7 @@ final addProductAction = atomAction((set) async {
     precoMedioUnitario: productPrecoMedioUnitario,
     precoMedioVenda: productPrecoMedioVenda,
     description: productDescriptionAtom.state?.trim(),
+    status: 1,
   );
 
   try {
@@ -436,4 +438,16 @@ final updateProductAction = atomAction1<Product>((set, currentProduct) async {
   } catch (e) {
     set(detailProductStateAtom, DetailProductStatesError(e.toString()));
   }
+});
+
+final addToimagenInlineImageList = atomAction1<List<ImagenInlineImage>>((
+  set,
+  images,
+) {
+  set(imagenInlineImageListAtom, [...images]);
+});
+
+final clearImagenInlineImageList = atomAction((set) {
+  imagenInlineImageListAtom.state.clear();
+  set(imagenInlineImageListAtom, imagenInlineImageListAtom.state);
 });

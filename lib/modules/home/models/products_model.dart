@@ -68,6 +68,8 @@ class Product {
   String? dFab; // Data de fabricação/ Produção
   String? dVal; // Data de Validade
 
+  int status;
+
   Product({
     required this.cProd,
     this.cEAN,
@@ -96,6 +98,7 @@ class Product {
     this.uCom,
     this.CEST,
     this.indTot = 1,
+    required this.status,
   });
 
   //Monitora se todos os campos essenciais estão preenchidos
@@ -256,6 +259,7 @@ class Product {
     'vSeg': vSeg,
     'vOutro': vOutro,
     'vDesc': vDesc,
+    'status': status,
   };
 
   factory Product.fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
@@ -291,6 +295,7 @@ class Product {
       CEST: (data['CEST'] as num?)?.toInt(),
       // Ensure int and handle null
       indTot: (data['indTot'] as num?)?.toInt() ?? 1,
+      status: data['status'],
     );
   }
 
@@ -352,6 +357,7 @@ class Product {
       uCom: uCom ?? this.uCom,
       CEST: CEST ?? this.CEST,
       indTot: indTot ?? this.indTot,
+      status: status,
     );
   }
 }

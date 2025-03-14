@@ -1,3 +1,4 @@
+import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:get_it/get_it.dart';
 
 import 'modules/auth/repository/auth_repository.dart';
@@ -51,4 +52,22 @@ void setupLocator() {
   );
 
   // getIt.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
+
+  // Register the FirebaseVertexAI instance
+  getIt.registerLazySingleton<FirebaseVertexAI>(
+    () => FirebaseVertexAI.instance,
+  );
+
+  // Register the Imagen model
+  getIt.registerLazySingleton<ImagenModel>(
+    () => getIt<FirebaseVertexAI>().imagenModel(
+      model: 'imagen-3.0-generate-002',
+      generationConfig: ImagenGenerationConfig(
+        numberOfImages: 4,
+        negativePrompt: 'background color',
+        aspectRatio: ImagenAspectRatio.square1x1,
+        imageFormat: ImagenFormat.jpeg(compressionQuality: 10),
+      ),
+    ),
+  );
 }

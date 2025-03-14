@@ -55,6 +55,7 @@ dependencies:
   vector_math: ^2.1.4
   barcode: ^2.2.9
   barcode_widget: ^2.0.4
+  firebase_vertexai: ^1.4.0
 
 dev_dependencies:
   flutter_test:

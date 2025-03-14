@@ -50,18 +50,18 @@ class LayoutScaffold extends StatelessWidget with HookMixin {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         showOverlaySnackbar(context, 'Produto atualizado com sucesso!');
         context.go('/home');
+        Future.delayed(const Duration(seconds: 5), () {
+          setDetailProductStateInitialAction();
+        });
       });
-      // Future.delayed(const Duration(seconds: 5), () {
-      //   setDetailProductStateInitialAction();
-      // });
     }
     if (detailProductState is DetailProductStatesError) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         showOverlaySnackbar(context, detailProductState.errorMessage);
+        Future.delayed(const Duration(seconds: 5), () {
+          setDetailProductStateInitialAction();
+        });
       });
-      // Future.delayed(const Duration(seconds: 5), () {
-      //   setDetailProductStateInitialAction();
-      // });
     }
 
     return Material(

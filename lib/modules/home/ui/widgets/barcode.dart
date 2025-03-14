@@ -11,13 +11,13 @@ buildBarcode(
       ? BarcodeWidget(
         barcode: Barcode.ean8(drawSpacers: true),
         data: data,
-        width: width * 0.4,
+        width: 180,
         height: height,
       )
       : BarcodeWidget(
         barcode: Barcode.ean13(drawEndChar: true),
         data: data,
-        width: width * 0.4,
+        width: 180,
         height: height,
       );
 }

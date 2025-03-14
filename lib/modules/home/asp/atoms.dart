@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:adm_botecaria/modules/home/models/gpc_model.dart';
 import 'package:adm_botecaria/modules/home/models/products_model.dart';
 import 'package:asp/asp.dart';
+import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/widgets.dart';
 
 import '../models/category_model.dart';
@@ -86,3 +87,5 @@ final gpcBrickListUpdateAtom = atom<List<GpcBrickModel>>([]);
 final scrollControllerCardGoalsAtom = atom<ScrollController>(
   ScrollController(),
 );
+
+final imagenInlineImageListAtom = atom<List<ImagenInlineImage>>([]);

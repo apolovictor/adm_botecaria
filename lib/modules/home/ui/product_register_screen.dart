@@ -1,9 +1,15 @@
+import 'dart:convert';
+
 import 'package:adm_botecaria/modules/home/providers/states/product_states.dart';
 import 'package:adm_botecaria/modules/home/ui/widgets/register/gpc_bricks_field.dart';
 import 'package:adm_botecaria/modules/home/ui/widgets/register/gpc_family_field.dart';
+import 'package:adm_botecaria/shared/widgets/behavior.dart';
 import 'package:asp/asp.dart';
+import 'package:firebase_vertexai/firebase_vertexai.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../setup_locator.dart';
 import '../../../shared/helpers/validators.dart';
 import '../asp/actions.dart';
 import '../asp/atoms.dart';
@@ -30,6 +36,8 @@ class ProductRegisterPage extends StatelessWidget with HookMixin {
     final gpcFamilySelected = useAtomState(gpcFamilySelectedAtom);
     final gpcClassSelected = useAtomState(gpcClassSelectedAtom);
     final productState = useAtomState(productStateAtom);
+    final productCode = useAtomState(productCodeAtom);
+    final imageList = useAtomState(imagenInlineImageListAtom);
 
     useAtomEffect((get) {
       get(scrollControllerAtom).addListener(() {
@@ -44,6 +52,8 @@ class ProductRegisterPage extends StatelessWidget with HookMixin {
         get(scrollControllerAtom).removeListener(() {});
       };
     });
+
+    print('imageList.length === ${imageList.length}');
 
     return Scaffold(
       floatingActionButtonLocation:
@@ -92,12 +102,18 @@ class ProductRegisterPage extends StatelessWidget with HookMixin {
                             children: [
                               MaterialButton(
                                 shape: const CircleBorder(),
-                                onPressed: () {
-                                  WidgetsBinding.instance.addPostFrameCallback((
-                                    _,
-                                  ) async {
-                                    await getGalleryImage(100, 100);
-                                  });
+                                onPressed: () async {
+                                  return await openActionSheet(
+                                    100,
+                                    100,
+                                    context,
+                                    [],
+                                  );
+                                  // WidgetsBinding.instance.addPostFrameCallback((
+                                  //   _,
+                                  // ) async {
+                                  //   await getGalleryImage(100, 100);
+                                  // });
                                 },
                                 child: Center(
                                   child: Icon(
@@ -139,6 +155,70 @@ class ProductRegisterPage extends StatelessWidget with HookMixin {
                             ],
                           ),
                         ),
+                    productCode.length > 2
+                        ? IconButton(
+                          onPressed: () async {
+                            clearImagenInlineImageList();
+                            final ImagenModel imagenModel =
+                                getIt<ImagenModel>();
+
+                            final prompt =
+                                'One picuture for product $productCode on a solid white color background. With thumbnail quality.';
+                            print('prompt === $prompt');
+                            // To generate images, call `generateImages` with the text prompt
+                            final response = await imagenModel.generateImages(
+                              prompt,
+                            );
+
+                            // If fewer images were generated than were requested,
+                            // then `filteredReason` will describe the reason they were filtered out
+                            if (response.filteredReason != null) {
+                              print(response.filteredReason);
+                            }
+
+                            if (response.images.isNotEmpty) {
+                              final images = response.images;
+                              addToimagenInlineImageList(images);
+                            } else {
+                              // Handle the case where no images were generated
+                              print('Error: No images were generated.');
+                            }
+                          },
+                          icon: Icon(Icons.deblur),
+                        )
+                        : SizedBox(),
+                    Expanded(
+                      child: ScrollConfiguration(
+                        behavior: MyCustomScrollBehavior(),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              for (var image in imageList)
+                                Container(
+                                  width: 300,
+                                  height: 300,
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: InkWell(
+                                    child: Image.memory(
+                                      image.bytesBase64Encoded,
+                                      width: 300,
+                                      height: 300,
+                                    ),
+                                    onTap: () {
+                                      print(image.mimeType);
+                                      print(image);
+                                      setProductImageAction(
+                                        image.bytesBase64Encoded,
+                                      );
+                                    },
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 15),
@@ -328,4 +408,66 @@ class ProductRegisterPage extends StatelessWidget with HookMixin {
       ),
     );
   }
+}
+
+Future<void> openActionSheet(
+  double maxWidth,
+  double maxHeight,
+  BuildContext context,
+  // List<CameraDescription> cameras,
+  List<dynamic>? photos,
+) {
+  return showCupertinoModalPopup<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return CupertinoActionSheet(
+        actions: <Widget>[
+          CupertinoActionSheetAction(
+            child: Text(
+              "Tirar Foto",
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) {
+              //       return CameraApp(cameras: cameras, page: page);
+              //     },
+              //   ),
+              // );
+            },
+          ),
+          CupertinoActionSheetAction(
+            child: Text(
+              "Escolher Foto",
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            ),
+            onPressed: () async {
+              await getGalleryImage(100, 100);
+
+              // page == 'register'
+              //     ? _getGalleryImage(maxWidth, maxHeight, ref, context)
+              //     : _getGalleryImageDetailPage(
+              //         maxWidth, maxHeight, ref, context, photos);
+
+              Navigator.pop(context);
+            },
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          isDefaultAction: true,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text(
+            "Cancelar",
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          ),
+        ),
+      );
+    },
+  );
 }
