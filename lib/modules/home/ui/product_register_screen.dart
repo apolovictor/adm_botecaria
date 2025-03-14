@@ -60,7 +60,7 @@ class ProductRegisterPage extends StatelessWidget with HookMixin {
       // Resize image
       ui.Codec codec = await ui.instantiateImageCodec(
         fileBytes,
-        targetWidth: 90,
+        targetWidth: 200,
       );
       ui.FrameInfo frameInfo = await codec.getNextFrame();
       final resizedImage = frameInfo.image;
