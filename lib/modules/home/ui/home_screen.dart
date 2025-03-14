@@ -1,6 +1,7 @@
 import 'package:adm_botecaria/modules/home/models/products_model.dart';
 import 'package:adm_botecaria/modules/home/ui/widgets/product_card.dart';
 import 'package:adm_botecaria/shared/utils/const.dart';
+import 'package:adm_botecaria/shared/widgets/behavior.dart';
 import 'package:asp/asp.dart';
 import 'package:flutter/material.dart';
 import '../asp/actions.dart';
@@ -140,8 +141,11 @@ class HomePage extends StatelessWidget with HookMixin {
         ),
         SizedBox(height: 20),
         Expanded(
-          child: SingleChildScrollView(
-            child: Column(children: [...generateCardProducts(result)]),
+          child: ScrollConfiguration(
+            behavior: MyCustomScrollBehavior(),
+            child: SingleChildScrollView(
+              child: Column(children: [...generateCardProducts(result)]),
+            ),
           ),
         ),
       ],

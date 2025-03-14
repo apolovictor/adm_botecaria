@@ -1,3 +1,4 @@
+import 'package:adm_botecaria/modules/home/providers/states/gen_ai_states.dart';
 import 'package:adm_botecaria/modules/home/providers/states/product_states.dart';
 import 'package:adm_botecaria/modules/home/ui/widgets/register/gpc_bricks_field.dart';
 import 'package:adm_botecaria/modules/home/ui/widgets/register/gpc_family_field.dart';
@@ -12,6 +13,7 @@ import '../../../shared/helpers/validators.dart';
 import '../asp/actions.dart';
 import '../asp/atoms.dart';
 import '../helpers/helpers.dart';
+import 'widgets/register/ai_gen_widget.dart';
 import 'widgets/register/brand_field.dart';
 import 'widgets/register/categories_field.dart';
 import 'widgets/register/gpc_class_field.dart';
@@ -39,8 +41,10 @@ class ProductRegisterPage extends StatelessWidget with HookMixin {
     final gpcFamilySelected = useAtomState(gpcFamilySelectedAtom);
     final gpcClassSelected = useAtomState(gpcClassSelectedAtom);
     final productState = useAtomState(productStateAtom);
-    final productCode = useAtomState(productCodeAtom);
     final imageList = useAtomState(imagenInlineImageListAtom);
+    final isPressed = useAtomState(isPressedAtom);
+    final genAiState = useAtomState(genAiStateAtom);
+    final width = MediaQuery.sizeOf(context).width;
 
     useAtomEffect((get) {
       get(scrollControllerAtom).addListener(() {
@@ -201,84 +205,96 @@ class ProductRegisterPage extends StatelessWidget with HookMixin {
                             ],
                           ),
                         ),
-                    productCode.length > 2
-                        ? IconButton(
-                          onPressed: () async {
-                            clearImagenInlineImageList();
-                            final ImagenModel imagenModel =
-                                getIt<ImagenModel>();
-
-                            final prompt =
-                                'One picuture for product $productCode on a opaque solid white color background. With thumbnail quality. Withou shadow, gradients';
-                            print('prompt === $prompt');
-                            // To generate images, call `generateImages` with the text prompt
-                            final response = await imagenModel.generateImages(
-                              prompt,
-                            );
-
-                            // If fewer images were generated than were requested,
-                            // then `filteredReason` will describe the reason they were filtered out
-                            if (response.filteredReason != null) {
-                              print(response.filteredReason);
-                            }
-
-                            if (response.images.isNotEmpty) {
-                              final images = response.images;
-                              addToimagenInlineImageList(images);
-                            } else {
-                              // Handle the case where no images were generated
-                              debugPrint('Error: No images were generated.');
-                            }
-                          },
-                          icon: Icon(Icons.deblur),
-                        )
-                        : SizedBox(),
-                    Expanded(
-                      child: ScrollConfiguration(
-                        behavior: MyCustomScrollBehavior(),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              for (var image in imageList)
-                                Container(
-                                  width: 300,
-                                  height: 300,
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  child: InkWell(
-                                    child: Image.memory(
-                                      image.bytesBase64Encoded,
-                                      width: 300,
-                                      height: 300,
-                                    ),
-                                    onTap: () async {
-                                      final imageResponse = await resizeImage(
-                                        image.bytesBase64Encoded,
-                                      );
-                                      final loadedImage = await loadImage(
-                                        imageResponse,
-                                      );
-                                      if (loadedImage != null) {
-                                        final processedImage =
-                                            removeWhiteBackground(loadedImage);
-                                        List<int> pngBytes = img.encodePng(
-                                          processedImage,
-                                        ); // Use encodePng for web compatibility
-
-                                        typed_data.Uint8List
-                                        processedUint8List = typed_data
-                                            .Uint8List.fromList(
-                                          pngBytes,
-                                        ); // Convert to Uint8List
-
-                                        setProductImageAction(
-                                          processedUint8List,
-                                        );
-                                      }
-                                    },
+                  ],
+                ),
+                SizedBox(height: 15),
+                imageList.isNotEmpty
+                    ? ScrollConfiguration(
+                      behavior: MyCustomScrollBehavior(),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            for (var image in imageList)
+                              Container(
+                                width: 300,
+                                height: 300,
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: InkWell(
+                                  child: Image.memory(
+                                    image.bytesBase64Encoded,
+                                    width: 300,
+                                    height: 300,
                                   ),
+                                  onTap: () async {
+                                    final imageResponse = await resizeImage(
+                                      image.bytesBase64Encoded,
+                                    );
+                                    final loadedImage = await loadImage(
+                                      imageResponse,
+                                    );
+                                    if (loadedImage != null) {
+                                      final processedImage =
+                                          removeWhiteBackground(loadedImage);
+                                      List<int> pngBytes = img.encodePng(
+                                        processedImage,
+                                      ); // Use encodePng for web compatibility
+
+                                      typed_data.Uint8List processedUint8List =
+                                          typed_data.Uint8List.fromList(
+                                            pngBytes,
+                                          ); // Convert to Uint8List
+
+                                      setProductImageAction(processedUint8List);
+                                    }
+                                  },
                                 ),
-                            ],
+                              ),
+                          ],
+                        ),
+                      ),
+                    )
+                    : SizedBox(),
+
+                SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTapDown:
+                          genAiState is! GenAiStatesSearchable &&
+                                  genAiState is! GenAiStatesLoading
+                              ? (details) {
+                                setIpressedAction(true);
+                                setGenAiStateSearchableAction();
+                              }
+                              : null,
+                      onTapUp: (details) => setIpressedAction(false),
+                      onTapCancel: () => setIpressedAction(false),
+                      child: Transform.scale(
+                        scale: isPressed ? 0.9 : 1.0,
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          width:
+                              genAiState is GenAiStatesSearchable
+                                  ? (width - 32)
+                                  : 200,
+                          height:
+                              genAiState is GenAiStatesSearchable ||
+                                      genAiState is GenAiStatesLoading
+                                  ? 200
+                                  : 75,
+                          child: AiGenWidget(
+                            child: Center(
+                              child: Text(
+                                imageList.isEmpty ? 'Gerar imagens' : 'Regerar',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -286,6 +302,7 @@ class ProductRegisterPage extends StatelessWidget with HookMixin {
                   ],
                 ),
                 SizedBox(height: 15),
+
                 getTextField(
                   labelText: 'Código do Produto (Interno) *',
                   keyboardType: TextInputType.text,

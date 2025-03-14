@@ -7,7 +7,7 @@ String? cProd(String? value) =>
     value == null
         ? 'Campo obrigatório'
         : value.isEmpty || value.length > 60
-        ? "Deve conter pelo menos 1 caracter e no Wmáximo 60 "
+        ? "Deve conter pelo menos 1 caracter e no máximo 60 "
         : null;
 
 String? cEan(String? value) {

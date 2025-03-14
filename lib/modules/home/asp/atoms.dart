@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:adm_botecaria/modules/home/models/gpc_model.dart';
 import 'package:adm_botecaria/modules/home/models/products_model.dart';
+import 'package:adm_botecaria/modules/home/providers/states/gen_ai_states.dart';
 import 'package:asp/asp.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/widgets.dart';
@@ -89,3 +90,9 @@ final scrollControllerCardGoalsAtom = atom<ScrollController>(
 );
 
 final imagenInlineImageListAtom = atom<List<ImagenInlineImage>>([]);
+
+final isPressedAtom = atom<bool>(false);
+
+final genAiStateAtom = atom<GenAiStates>(GenAiStatesInitial());
+
+final promptAtom = atom<String>('');

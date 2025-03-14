@@ -1,8 +1,10 @@
 import 'dart:typed_data';
 import 'package:adm_botecaria/modules/home/models/gpc_model.dart';
 import 'package:adm_botecaria/modules/home/models/products_model.dart';
+import 'package:adm_botecaria/modules/home/providers/states/gen_ai_states.dart';
 import 'package:asp/asp.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
+import 'package:flutter/material.dart';
 import '../../../setup_locator.dart';
 import '../interactor/update_image_product_interactor.dart';
 import '../models/category_model.dart';
@@ -453,4 +455,64 @@ final addToimagenInlineImageList = atomAction1<List<ImagenInlineImage>>((
 final clearImagenInlineImageList = atomAction((set) {
   imagenInlineImageListAtom.state.clear();
   set(imagenInlineImageListAtom, imagenInlineImageListAtom.state);
+});
+
+final setIpressedAction = atomAction1<bool>((set, isPressed) {
+  set(isPressedAtom, isPressed);
+});
+
+final setGenAiStateSearchableAction = atomAction((set) {
+  set(genAiStateAtom, GenAiStatesSearchable());
+});
+
+final setGenAiStateInitialAction = atomAction((set) {
+  set(genAiStateAtom, GenAiStatesInitial());
+});
+
+final setGenAiStateLoadingAction = atomAction((set) {
+  set(genAiStateAtom, GenAiStatesLoading());
+});
+
+final setGenAiStateSuccessAction = atomAction((set) {
+  set(genAiStateAtom, GenAiStatesSuccess());
+});
+
+final setGenAiStateErrorAction = atomAction1<String>((set, error) {
+  set(genAiStateAtom, GenAiStatesError(error));
+});
+
+final setPromptAction = atomAction1<String>((set, prompt) {
+  set(promptAtom, prompt);
+});
+
+final generationImagesAction = atomAction((set) async {
+  setGenAiStateLoadingAction();
+  try {
+    clearImagenInlineImageList();
+    final ImagenModel imagenModel = getIt<ImagenModel>();
+
+    final prompt =
+        'One picuture for product ${promptAtom.state} on a opaque solid white color background. With thumbnail quality. Withou shadow, gradients';
+    print('prompt === $prompt');
+    // To generate images, call `generateImages` with the text prompt
+    final response = await imagenModel.generateImages(prompt);
+
+    // If fewer images were generated than were requested,
+    // then `filteredReason` will describe the reason they were filtered out
+    if (response.filteredReason != null) {
+      setGenAiStateErrorAction(response.filteredReason.toString());
+    }
+
+    if (response.images.isNotEmpty) {
+      final images = response.images;
+      addToimagenInlineImageList(images);
+      setGenAiStateSuccessAction();
+    } else {
+      // Handle the case where no images were generated
+      debugPrint('Error: No images were generated.');
+    }
+  } catch (e) {
+    print('Gen AI error: $e');
+    setGenAiStateErrorAction(e.toString());
+  }
 });
